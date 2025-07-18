@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb87af283a4d74b4c8187cf9b149c97e, type: 3}
+  m_Name: NewGun
+  m_EditorClassIdentifier: 
+  BulletPrefab: {fileID: 1150020080090705670, guid: 33db7e58ab6e1e946a775e15494a8b7d, type: 3}
+  reloadTime: 0.32
+  maxClipSize: 3
+  currentClipSize: 2
+  shootCooldown: 0.88
+  cooldownTimer: -0.0026382399
+  fireMode: 1
+  burstCount: 0
+  grapplingHookPrefab: {fileID: 1150020080090705670, guid: 33db7e58ab6e1e946a775e15494a8b7d, type: 3}
