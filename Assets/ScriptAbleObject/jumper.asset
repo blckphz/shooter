@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a7db3952f289934db67b97262fe69cb, type: 3}
-  m_Name: Pistol
+  m_Script: {fileID: 11500000, guid: ad29087447ada8340bc8fdcc031dc23e, type: 3}
+  m_Name: jumper
   m_EditorClassIdentifier: 
-  BulletPrefab: {fileID: 8156807615867147180, guid: 275f4d103c0c30b49ae0e8e4f900b5b5, type: 3}
-  reloadTime: 2.15
-  maxClipSize: 85
-  bulletSpeed: 59.5
-  ShootFreq: 22
+  BulletPrefab: {fileID: 7228427364146905343, guid: 2fb9f1dae54c39a4498bdc3b7fb0b5c2, type: 3}
+  reloadTime: 4.29
+  maxClipSize: 4
+  bulletSpeed: 12.9
+  ShootFreq: 0.52
   currentClipSize: 0
-  shootCooldown: 1.13
-  cooldownTimer: 0.5274394
-  fireMode: 2
+  shootCooldown: 0.48
+  cooldownTimer: 0.0014947082
+  fireMode: 1
   burstCount: 3

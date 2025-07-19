@@ -15,6 +15,8 @@ public abstract class GunSO : ScriptableObject
     public GameObject BulletPrefab;
     public float reloadTime;
     public int maxClipSize;
+    public float bulletSpeed;
+    public float ShootFreq;
 
     [HideInInspector]
     public int currentClipSize;

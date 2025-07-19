@@ -10,14 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb87af283a4d74b4c8187cf9b149c97e, type: 3}
-  m_Name: NewGun
+  m_Name: grapple
   m_EditorClassIdentifier: 
   BulletPrefab: {fileID: 1150020080090705670, guid: 33db7e58ab6e1e946a775e15494a8b7d, type: 3}
-  reloadTime: 0.32
+  reloadTime: 3.24
   maxClipSize: 3
+  bulletSpeed: 70.9
+  ShootFreq: 2.74
   currentClipSize: 2
   shootCooldown: 0.88
-  cooldownTimer: -0.0026382399
-  fireMode: 1
+  cooldownTimer: -0.0020528429
+  fireMode: 0
   burstCount: 0
   grapplingHookPrefab: {fileID: 1150020080090705670, guid: 33db7e58ab6e1e946a775e15494a8b7d, type: 3}

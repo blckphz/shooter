@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   line: {fileID: 0}
   player: {fileID: 0}
-  pullSpeed: 20
+  pullSpeed: 30
   maxDistance: 50
 --- !u!23 &4316711851240344146
 MeshRenderer:

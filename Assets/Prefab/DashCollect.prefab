@@ -123,9 +123,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 940763dcaeec2144b8b8dbff5a0c83c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pmove: {fileID: 0}
   rb: {fileID: -3837156593469590823}
-  spinSpeedRad: 0
+  hoverSpeed: 2
+  hoverHeight: 0.5
+  boostBonus: 23.6
 --- !u!54 &-3837156593469590823
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ public class DashCollect : MonoBehaviour
     public Rigidbody rb;
     public float hoverSpeed = 2f;       // Speed of hovering
     public float hoverHeight = 0.5f;    // How high it moves up/down
-
+    public float boostBonus = 5f;
     private Vector3 startPos;
 
     void Start()
@@ -29,7 +29,21 @@ public class DashCollect : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Destroy(collision.gameObject);
+
+            Rigidbody playerRb = collision.gameObject.GetComponent<Rigidbody>();
+            if (playerRb != null)
+            {
+                // Add upward velocity boost
+                Vector3 velocity = playerRb.linearVelocity;
+                velocity.y = boostBonus;  // directly set upward velocity
+                playerRb.linearVelocity = velocity;
+
+                // Alternatively, you could use AddForce:
+                // playerRb.AddForce(Vector3.up * boostBonus, ForceMode.VelocityChange);
+            }
+
+
+            Destroy(gameObject);
             // Add your pickup logic here
         }
     }

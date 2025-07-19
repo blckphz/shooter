@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 public class grapplingHook : MonoBehaviour
 {
@@ -7,10 +6,13 @@ public class grapplingHook : MonoBehaviour
     public Transform player;
     public float pullSpeed = 20f;
     public float maxDistance = 50f;
+    public float idleTimeBeforeDetach = 1f; // Time in seconds before destroying if idle
+    public float velocityThreshold = 0.1f;  // Threshold to consider as "not moving"
 
     private bool isAttached = false;
     private Rigidbody rb;
     private Vector3 hitPoint;
+    private float idleTimer = 0f;
 
     void Start()
     {
@@ -37,6 +39,7 @@ public class grapplingHook : MonoBehaviour
         if (isAttached)
         {
             PullPlayer();
+            CheckIdle();
         }
     }
 
@@ -66,6 +69,28 @@ public class grapplingHook : MonoBehaviour
         }
     }
 
+    void CheckIdle()
+    {
+        Rigidbody playerRb = player.GetComponent<Rigidbody>();
+        if (playerRb != null)
+        {
+            bool playerStill = playerRb.linearVelocity.magnitude < velocityThreshold;
+            bool hookStill = rb.linearVelocity.magnitude < velocityThreshold;
+
+            if (playerStill && hookStill)
+            {
+                idleTimer += Time.deltaTime;
+                if (idleTimer >= idleTimeBeforeDetach)
+                {
+                    Detach();
+                }
+            }
+            else
+            {
+                idleTimer = 0f; // Reset timer if movement detected
+            }
+        }
+    }
 
     void Detach()
     {

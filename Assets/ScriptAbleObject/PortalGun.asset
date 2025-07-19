@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77bf19b3d18362943bba117b3605bbdc, type: 3}
+  m_Name: PortalGun
+  m_EditorClassIdentifier: 
+  BulletPrefab: {fileID: 6759846994078647378, guid: 6f02a6ca99e5a834b8cb83c967338575, type: 3}
+  reloadTime: 2.72
+  maxClipSize: 3
+  bulletSpeed: 16.5
+  ShootFreq: 0.89
+  currentClipSize: 3
+  shootCooldown: 0.85
+  cooldownTimer: 0
+  fireMode: 0
+  burstCount: 0
+  portalProjectilePrefab: {fileID: 6759846994078647378, guid: 6f02a6ca99e5a834b8cb83c967338575, type: 3}
+  bluePortalPrefab: {fileID: 244000369166352083, guid: 27eb4acec2c462d429e21c4181d637bf, type: 3}
+  orangePortalPrefab: {fileID: 6805268084785665883, guid: 6f126c54ee94201488f22265bb1237ef, type: 3}
+  currentBluePortal: {fileID: 0}
+  currentOrangePortal: {fileID: 0}
