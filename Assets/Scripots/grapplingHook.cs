@@ -6,13 +6,14 @@ public class grapplingHook : MonoBehaviour
     public Transform player;
     public float pullSpeed = 20f;
     public float maxDistance = 50f;
-    public float idleTimeBeforeDetach = 1f; // Time in seconds before destroying if idle
-    public float velocityThreshold = 0.1f;  // Threshold to consider as "not moving"
+    public float idleTimeBeforeDetach = 1f;
+    public float velocityThreshold = 0.1f;
 
     private bool isAttached = false;
     private Rigidbody rb;
     private Vector3 hitPoint;
     private float idleTimer = 0f;
+    private enemyMove grabbedEnemy; // Reference to enemy
 
     void Start()
     {
@@ -25,17 +26,15 @@ public class grapplingHook : MonoBehaviour
     {
         if (player == null) return;
 
-        // Update rope positions
         line.SetPosition(0, player.position);
         line.SetPosition(1, transform.position);
 
-        // Detach if player presses right-click or rope too long
         if (Input.GetMouseButtonDown(1) || Vector3.Distance(player.position, transform.position) > maxDistance)
         {
+            Debug.Log("[GrapplingHook] Manual detach triggered.");
             Detach();
         }
 
-        // If attached, pull player
         if (isAttached)
         {
             PullPlayer();
@@ -47,10 +46,20 @@ public class grapplingHook : MonoBehaviour
     {
         if (!isAttached && collision.gameObject.CompareTag("Enemy"))
         {
-            rb.linearVelocity = Vector3.zero; // Stop hook
-            rb.isKinematic = true;      // Freeze
+            rb.linearVelocity = Vector3.zero;
+            rb.isKinematic = true;
             hitPoint = transform.position;
             isAttached = true;
+
+            // Parent hook to enemy so it moves with them
+            transform.SetParent(collision.gameObject.transform);
+
+            grabbedEnemy = collision.gameObject.GetComponent<enemyMove>();
+            if (grabbedEnemy != null)
+            {
+                grabbedEnemy.OnHookAttach();
+                Debug.Log("[GrapplingHook] Hook attached to enemy: " + collision.gameObject.name);
+            }
         }
     }
 
@@ -60,11 +69,12 @@ public class grapplingHook : MonoBehaviour
         if (playerRb != null)
         {
             Vector3 direction = (hitPoint - player.position).normalized;
-            playerRb.linearVelocity = direction * pullSpeed; // Directly set velocity
+            playerRb.linearVelocity = direction * pullSpeed;
         }
 
         if (Vector3.Distance(player.position, hitPoint) < 2f)
         {
+            Debug.Log("[GrapplingHook] Player reached hook point, detaching.");
             Detach();
         }
     }
@@ -82,18 +92,26 @@ public class grapplingHook : MonoBehaviour
                 idleTimer += Time.deltaTime;
                 if (idleTimer >= idleTimeBeforeDetach)
                 {
+                    Debug.Log("[GrapplingHook] Hook idle too long, detaching.");
                     Detach();
                 }
             }
             else
             {
-                idleTimer = 0f; // Reset timer if movement detected
+                idleTimer = 0f;
             }
         }
     }
 
     void Detach()
     {
-        Destroy(gameObject); // Destroy hook
+        if (grabbedEnemy != null)
+        {
+            grabbedEnemy.OnHookDetach();
+            Debug.Log("[GrapplingHook] Hook detached from enemy.");
+            grabbedEnemy = null;
+        }
+
+        Destroy(gameObject);
     }
 }

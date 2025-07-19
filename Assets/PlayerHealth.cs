@@ -36,7 +36,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    void DestroyActiveGrapplingHook()
+   public void DestroyActiveGrapplingHook()
     {
         // Find all grappling hooks in the scene
         grapplingHook[] hooks = FindObjectsOfType<grapplingHook>();

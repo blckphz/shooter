@@ -8,11 +8,26 @@ public class gunAiming : MonoBehaviour
     public Transform gunPivot;
     public GameObject gameOverScreen;
 
+    // Zoom parameters
+    public float zoomedFOV = 30f;
+    public float normalFOV = 60f;
+    public float zoomSpeed = 10f;
+    public GunBehaviour gunBehaviour;
+
+
     private float xRotation = 0f;
+
+    private Camera cam;
+
 
     void Start()
     {
         LockCursor(true);
+        cam = Camera.main; // get main camera reference once
+        if (cam != null)
+        {
+            normalFOV = cam.fieldOfView; // store normal FOV at start
+        }
     }
 
     void Update()
@@ -38,6 +53,24 @@ public class gunAiming : MonoBehaviour
 
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         gunPivot.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+
+        // Right-click aim zoom only if NOT using the portal gun
+        if (gunBehaviour.currentGunIndex == 0)
+        {
+            if (Input.GetMouseButton(1)) // right mouse button held
+            {
+                cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, zoomedFOV, Time.deltaTime * zoomSpeed);
+            }
+            else
+            {
+                cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, normalFOV, Time.deltaTime * zoomSpeed);
+            }
+        }
+        else if (cam != null)
+        {
+            // If using portal gun, reset FOV to normal just in case
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, normalFOV, Time.deltaTime * zoomSpeed);
+        }
     }
 
     void LockCursor(bool shouldLock)

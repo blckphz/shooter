@@ -104,14 +104,14 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
+  m_Radius: 0.57611144
+  m_Height: 2.5072002
   m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+  m_Center: {x: 0.0106591685, y: 0.045508932, z: -0.00000006708013}
 --- !u!54 &6241680101257670858
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -151,3 +151,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d21c501a5a3b7a6448288c3cb896806d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 10

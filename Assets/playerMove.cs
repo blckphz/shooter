@@ -24,6 +24,9 @@ public class PlayerMove : MonoBehaviour
     [Tooltip("How fast velocity moves toward target when you ARE providing input.")]
     public float moveSmoothing = 10f;
 
+    [Header("References")]
+    public Transform cameraTransform; // Assign the camera transform here
+
     // --- Private state ---
     Rigidbody rb;
     bool isDashing = false;
@@ -60,10 +63,19 @@ public class PlayerMove : MonoBehaviour
         // Capture raw input in Update (better responsiveness)
         moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
 
-        // Dash input
-        if (Input.GetKeyDown(KeyCode.LeftShift) && dashCooldownTimer <= 0f && moveInput != Vector3.zero)
+        // Dash input using camera's forward direction including vertical
+        if (Input.GetKeyDown(KeyCode.LeftShift) && dashCooldownTimer <= 0f)
         {
-            StartDash(moveInput);
+            if (cameraTransform == null)
+            {
+                Debug.LogWarning("CameraTransform not assigned to PlayerMove script.");
+                return;
+            }
+
+            Vector3 dashDir = cameraTransform.forward.normalized;
+
+            if (dashDir != Vector3.zero)
+                StartDash(dashDir);
         }
     }
 
@@ -101,14 +113,13 @@ public class PlayerMove : MonoBehaviour
         ApplyExtraGravity();
     }
 
-
     void StartDash(Vector3 direction)
     {
         isDashing = true;
         dashTimer = dashDuration;
         dashCooldownTimer = dashCooldown;
-        // Store world‑space direction
-        dashDirection = transform.TransformDirection(direction).normalized;
+        // Use direction directly since it's world-space from camera forward
+        dashDirection = direction.normalized;
     }
 
     void UpdateDashCooldownUI()

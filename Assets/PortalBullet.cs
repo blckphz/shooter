@@ -33,17 +33,16 @@ public class PortalBullet : MonoBehaviour
             Debug.Log("Ignoring collision: collider disabled");
             return;
         }
-        if (hasPlacedPortal)
+
+        // --- Ignore Player but continue flying ---
+        if (collision.collider.CompareTag("Player"))
         {
-            Debug.Log("Ignoring collision: portal already placed");
-            return;
-        }
-        if (collision.collider.gameObject.name.Contains("Player"))
-        {
-            Debug.Log("Ignoring collision with Player");
-            return;
+            Debug.Log("Ignoring collision with Player and continuing...");
+            Physics.IgnoreCollision(collision.collider, bulletCollider);
+            return;  // Don't place portal, just ignore this hit
         }
 
+        // --- Ignore non-portal surfaces ---
         string surfaceName = collision.collider.gameObject.name;
         if (!surfaceName.Contains("Wall") && !surfaceName.Contains("Surface"))
         {
@@ -51,13 +50,16 @@ public class PortalBullet : MonoBehaviour
             return;
         }
 
-        hasPlacedPortal = true;
-
-        if (bulletCollider != null)
+        // --- Portal placement ---
+        if (hasPlacedPortal)
         {
-            bulletCollider.enabled = false;  // Disable collider immediately to prevent further collisions
-            Debug.Log("Bullet collider disabled after placing portal");
+            Debug.Log("Ignoring collision: portal already placed");
+            return;
         }
+
+        hasPlacedPortal = true;
+        bulletCollider.enabled = false;  // Prevent further collisions
+        Debug.Log("Bullet collider disabled after placing portal");
 
         ContactPoint contact = collision.contacts[0];
         Vector3 portalPosition = contact.point;
@@ -72,4 +74,5 @@ public class PortalBullet : MonoBehaviour
         Destroy(gameObject);
         Debug.Log("Bullet destroyed after placing portal");
     }
+
 }

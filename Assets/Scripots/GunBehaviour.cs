@@ -4,7 +4,7 @@ using System.Collections;
 public class GunBehaviour : MonoBehaviour
 {
     public GunSO[] guns;
-    private int currentGunIndex = 0;
+    public int currentGunIndex = 0;
 
     public GunSO currentGunso;
     public Transform spawnPoint;
@@ -60,16 +60,17 @@ public class GunBehaviour : MonoBehaviour
         // Special case for PortalGun
         if (currentGunso is PortalGun portalGun)
         {
-            if (Input.GetButtonDown("Fire1") && !isReloading)
+            if (Input.GetButtonDown("Fire1") && !isReloading) // Left click for blue portal
             {
                 portalGun.ShootBluePortal(spawnPoint, currentGunso.bulletSpeed);
             }
-            else if (Input.GetButtonDown("Fire2") && !isReloading)
+            else if (Input.GetMouseButtonDown(4) && !isReloading) // Mouse4 thumb button for orange portal
             {
                 portalGun.ShootOrangePortal(spawnPoint, currentGunso.bulletSpeed);
             }
             return; // Skip normal shooting logic
         }
+
 
         // Handle other guns
         switch (currentGunso.fireMode)
@@ -100,14 +101,14 @@ public class GunBehaviour : MonoBehaviour
 
     private void HandleGunSwitch()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             if (guns.Length == 0) return;
             currentGunIndex = (currentGunIndex + 1) % guns.Length;
             SwitchGun(guns[currentGunIndex]);
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             if (guns.Length == 0) return;
             currentGunIndex--;
