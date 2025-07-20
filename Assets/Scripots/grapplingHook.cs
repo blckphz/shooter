@@ -44,7 +44,14 @@ public class grapplingHook : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (!isAttached && collision.gameObject.CompareTag("Enemy"))
+        if (isAttached && collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("[GrapplingHook] Hook collided with player after hooking enemy, destroying hook.");
+            Destroy(gameObject);
+            return;
+        }
+
+        if (!isAttached && (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Balloon")))
         {
             rb.linearVelocity = Vector3.zero;
             rb.isKinematic = true;
@@ -57,7 +64,7 @@ public class grapplingHook : MonoBehaviour
             grabbedEnemy = collision.gameObject.GetComponent<enemyMove>();
             if (grabbedEnemy != null)
             {
-                grabbedEnemy.OnHookAttach();
+                grabbedEnemy.OnHookAttach(this);  // Pass this hook instance!
                 Debug.Log("[GrapplingHook] Hook attached to enemy: " + collision.gameObject.name);
             }
         }

@@ -53,6 +53,8 @@ MonoBehaviour:
   player: {fileID: 0}
   pullSpeed: 30
   maxDistance: 50
+  idleTimeBeforeDetach: 1
+  velocityThreshold: 0.1
 --- !u!23 &4316711851240344146
 MeshRenderer:
   m_ObjectHideFlags: 0

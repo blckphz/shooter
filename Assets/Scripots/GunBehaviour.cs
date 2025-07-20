@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 public class GunBehaviour : MonoBehaviour
 {
@@ -14,12 +15,15 @@ public class GunBehaviour : MonoBehaviour
     public float gun2XScale = 2f;
     public float gun3YScale = 1.5f;
 
+    [Header("Materials for guns (4 slots)")]
+    public Material[] gunMaterials = new Material[4];
+
     private bool isReloading = false;
     private bool isBurstShooting = false;
 
     private Coroutine autoShootCoroutine;
     private Coroutine burstShootCoroutine;
-
+    public GameObject extraObject;
     public bool IsReloading => isReloading;
 
     void Start()
@@ -51,10 +55,16 @@ public class GunBehaviour : MonoBehaviour
             StartCoroutine(Reload());
         }
 
-        // Stop shooting when fire button is released
+        // Stop auto shooting when fire button is released, but do NOT stop burst shooting here
         if (Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire2"))
         {
-            StopShootingCoroutines();
+            if (autoShootCoroutine != null)
+            {
+                StopCoroutine(autoShootCoroutine);
+                autoShootCoroutine = null;
+                isBurstShooting = false; // only reset for auto fire
+            }
+            // Intentionally NOT stopping burstShootCoroutine here
         }
 
         // Special case for PortalGun
@@ -71,7 +81,6 @@ public class GunBehaviour : MonoBehaviour
             return; // Skip normal shooting logic
         }
 
-
         // Handle other guns
         switch (currentGunso.fireMode)
         {
@@ -83,21 +92,23 @@ public class GunBehaviour : MonoBehaviour
                 break;
 
             case FireMode.Auto:
-                if (Input.GetButton("Fire1") && !isReloading && autoShootCoroutine == null)
+                if (Input.GetButtonDown("Fire1") && !isReloading && autoShootCoroutine == null)
                 {
+                    isBurstShooting = true; // block others while auto shooting
                     autoShootCoroutine = StartCoroutine(AutoShoot());
                 }
                 break;
 
             case FireMode.Burst:
-                if (Input.GetButton("Fire1") && !isBurstShooting && burstShootCoroutine == null)
+                // Only start burst if none running and not reloading
+                if (Input.GetButtonDown("Fire1") && !isBurstShooting && burstShootCoroutine == null && !isReloading && currentGunso.currentClipSize > 0)
                 {
+                    isBurstShooting = true;  // Set immediately to block spam
                     burstShootCoroutine = StartCoroutine(BurstShoot());
                 }
                 break;
         }
     }
-
 
     private void HandleGunSwitch()
     {
@@ -122,7 +133,7 @@ public class GunBehaviour : MonoBehaviour
     {
         if (newGun == null) return;
 
-        StopAllCoroutines(); // cancel ongoing actions like reload/shoot
+        StopAllCoroutines();
         isReloading = false;
         isBurstShooting = false;
         autoShootCoroutine = null;
@@ -145,6 +156,34 @@ public class GunBehaviour : MonoBehaviour
             scale.y = gun3YScale;
         }
         transform.localScale = scale;
+
+        // Assign material from gunMaterials array if available
+        if (gunMaterials != null && gunMaterials.Length > currentGunIndex && gunMaterials[currentGunIndex] != null)
+        {
+            Renderer renderer = GetComponent<Renderer>() ?? GetComponentInChildren<Renderer>();
+
+            if (renderer != null)
+            {
+                renderer.material = gunMaterials[currentGunIndex];
+            }
+            else
+            {
+                Debug.LogWarning("No Renderer found on gun GameObject to assign the material.");
+            }
+
+            if (extraObject != null)
+            {
+                Renderer extraRenderer = extraObject.GetComponent<Renderer>();
+                if (extraRenderer != null)
+                {
+                    extraRenderer.material = gunMaterials[currentGunIndex];
+                }
+                else
+                {
+                    Debug.LogWarning("No Renderer found on extraObject to assign the material.");
+                }
+            }
+        }
     }
 
     private void InitializeGun(GunSO gun)
@@ -188,28 +227,35 @@ public class GunBehaviour : MonoBehaviour
 
     IEnumerator BurstShoot()
     {
-        isBurstShooting = true;
         int shotsFired = 0;
 
         while (shotsFired < currentGunso.burstCount && currentGunso.currentClipSize > 0)
         {
-            if (currentGunso.cooldownTimer <= 0f)
+            // Wait for cooldown to be done
+            while (currentGunso.cooldownTimer > 0f)
             {
-                TryShoot();
-                shotsFired++;
+                yield return null;
             }
+
+            TryShoot();
+            shotsFired++;
+
+            // Set cooldown for next shot
+            currentGunso.cooldownTimer = 1f / currentGunso.ShootFreq;
+
             yield return null;
         }
 
+        // Cooldown after burst finishes
         currentGunso.cooldownTimer = currentGunso.shootCooldown;
+
+        // Reset burst flags only here at end
         isBurstShooting = false;
         burstShootCoroutine = null;
     }
 
     IEnumerator AutoShoot()
     {
-        isBurstShooting = true;
-
         while (Input.GetButton("Fire1") && currentGunso.currentClipSize > 0 && !isReloading)
         {
             if (currentGunso.cooldownTimer <= 0f)
@@ -220,6 +266,7 @@ public class GunBehaviour : MonoBehaviour
         }
 
         currentGunso.cooldownTimer = currentGunso.shootCooldown;
+
         isBurstShooting = false;
         autoShootCoroutine = null;
     }

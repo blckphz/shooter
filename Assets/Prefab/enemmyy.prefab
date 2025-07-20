@@ -154,7 +154,6 @@ GameObject:
   - component: {fileID: 4295783340418394733}
   - component: {fileID: 8773854357749356015}
   - component: {fileID: 4975492833161357678}
-  - component: {fileID: 8958060919974771877}
   m_Layer: 0
   m_Name: enemmyy
   m_TagString: Enemy
@@ -250,10 +249,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.65638065
-  m_Height: 2
+  m_Radius: 0.74339294
+  m_Height: 2.5532665
   m_Direction: 1
-  m_Center: {x: -0.09066105, y: 0, z: 0.029168963}
+  m_Center: {x: -0.04849243, y: -0.12597656, z: 0.029168963}
 --- !u!114 &3325569957564425884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,7 +343,6 @@ MonoBehaviour:
   boostBonus: 43.53
   damageOnHit: 20
   grappedDuration: 0.5
-  grappedTimer: 0
 --- !u!114 &8773854357749356015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,27 +369,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d592418c3914f84cb5372ccff17573b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &8958060919974771877
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6353399159063990590}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.0000001, y: 2, z: 1.0000002}
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &7971091865744968915
 GameObject:
   m_ObjectHideFlags: 0

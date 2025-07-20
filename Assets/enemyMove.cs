@@ -1,5 +1,6 @@
 using UnityEngine;
-using Pathfinding;  // Import A* Pathfinding namespace
+using Pathfinding;
+using System.Collections;
 
 public class enemyMove : MonoBehaviour
 {
@@ -9,14 +10,14 @@ public class enemyMove : MonoBehaviour
     public float floatHeight = 1.5f;
 
     [Header("Grappling Status")]
-    public bool grapped = false;               // True when grapped
-    public Color grappedColor = Color.red;     // Color when grapped
-    public float boostBonus = 5f;              // Boost when grapped
-    public int damageOnHit = 20;               // Damage to player if not grapped
-    public float grappedDuration = 0.5f;       // Duration to stay grapped after hook is destroyed
+    public bool grapped = false;
+    public Color grappedColor = Color.red;
+    public float boostBonus = 5f;
+    public int damageOnHit = 20;
+    public float grappedDuration = 0.5f;
 
-    public float grappedTimer = 0f;
-    private bool hookAttached = false;         // Tracks actual hook attachment
+    private bool hookAttached = false;
+    private Coroutine ungrappleCoroutine;
 
     private Path path;
     private int currentWaypoint = 0;
@@ -24,6 +25,8 @@ public class enemyMove : MonoBehaviour
     private Rigidbody rb;
     private Color originalColor;
     private Renderer rend;
+
+    public grapplingHook currentHook; // Reference to the attached grappling hook
 
     void Start()
     {
@@ -67,18 +70,8 @@ public class enemyMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        // --- Handle Grapple Timer ---
-        if (!hookAttached && grappedTimer > 0f)
-        {
-            grappedTimer -= Time.fixedDeltaTime;
-            if (grappedTimer <= 0f)
-            {
-                grapped = false;
-                Debug.Log("[EnemyMove] Enemy is no longer grapped (timer ended).");
-            }
-        }
+        CheckForHookChild();
 
-        // --- If Grapped, Stop Movement ---
         if (grapped)
         {
             rb.linearVelocity = Vector3.zero;
@@ -93,7 +86,6 @@ public class enemyMove : MonoBehaviour
         if (player == null || path == null || currentWaypoint >= path.vectorPath.Count)
             return;
 
-        // --- Path Movement ---
         Vector3 currentPosition = rb.position;
         Vector3 targetPosition = path.vectorPath[currentWaypoint];
 
@@ -132,6 +124,13 @@ public class enemyMove : MonoBehaviour
                     stats.TakeDamage(damageOnHit);
                 }
 
+                // Destroy hook when damaged
+                if (currentHook != null)
+                {
+                    Destroy(currentHook.gameObject);
+                    currentHook = null;
+                }
+
                 if (playerRb != null)
                 {
                     Vector3 velocity = playerRb.linearVelocity;
@@ -142,7 +141,6 @@ public class enemyMove : MonoBehaviour
             else
             {
                 PlayerHealth.Health -= damageOnHit;
-                Debug.Log("[EnemyMove] Player hit by enemy! Health: " + PlayerHealth.Health);
 
                 PlayerHealth playerHealth = other.gameObject.GetComponent<PlayerHealth>();
                 if (playerHealth != null)
@@ -159,26 +157,58 @@ public class enemyMove : MonoBehaviour
         }
     }
 
-    // --- Called by Grappling Hook on Attach ---
-    public void OnHookAttach()
+    public void OnHookAttach(grapplingHook hook)
     {
         hookAttached = true;
         grapped = true;
-        grappedTimer = 0f; // Reset timer while attached
+
+        currentHook = hook;
+
+        if (ungrappleCoroutine != null)
+        {
+            StopCoroutine(ungrappleCoroutine);
+            ungrappleCoroutine = null;
+        }
+
         Debug.Log("[EnemyMove] Enemy hooked!");
     }
 
-    // --- Called by Grappling Hook on Detach ---
     public void OnHookDetach()
     {
-        hookAttached = false;
-        grappedTimer = grappedDuration; // Start countdown
-        Debug.Log("[EnemyMove] Hook detached, enemy will un-grap after " + grappedDuration + " seconds.");
+        if (currentHook != null)
+        {
+            currentHook = null;
+        }
+
+        if (ungrappleCoroutine == null)
+            ungrappleCoroutine = StartCoroutine(RemoveGrappleAfterDelay(grappedDuration));
     }
 
-    // --- Check if the hook is still attached ---
-    public bool IsHookAttached()
+    private IEnumerator RemoveGrappleAfterDelay(float delay)
     {
-        return hookAttached;
+        yield return new WaitForSeconds(delay);
+
+        if (!HasHookChild())
+        {
+            hookAttached = false;
+            grapped = false;
+            Debug.Log("[EnemyMove] No hook child found, removing grapple status.");
+        }
+
+        ungrappleCoroutine = null;
+    }
+
+    private void CheckForHookChild()
+    {
+        if (!HasHookChild() && hookAttached)
+        {
+            if (ungrappleCoroutine == null)
+                ungrappleCoroutine = StartCoroutine(RemoveGrappleAfterDelay(0.5f));
+        }
+    }
+
+    private bool HasHookChild()
+    {
+        return transform.Find("hook(Clone)") != null;
     }
 }

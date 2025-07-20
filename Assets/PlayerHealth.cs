@@ -1,10 +1,13 @@
 using UnityEngine;
+using TMPro; // Import TextMeshPro namespace
 
 public class PlayerHealth : MonoBehaviour
 {
     public static int Health = 100; // Start with 100 health
     public CapsuleCollider capsule;
     public GameObject gameOverScreen, gamescreen; // Assign in Inspector
+    public TextMeshProUGUI healthText; // Reference to TextMeshPro text
+
     private stateManager stateManager;
     private Rigidbody rb; // For applying force
 
@@ -19,49 +22,67 @@ public class PlayerHealth : MonoBehaviour
         {
             gameOverScreen.SetActive(false); // Hide at start
         }
+
+        UpdateHealthUI(); // Initialize UI
     }
 
     void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
+            // Get the enemyMove component to check if hooked
+            enemyMove enemy = other.gameObject.GetComponent<enemyMove>();
+
+            if (enemy != null && enemy.grapped)
+            {
+                // Enemy is hooked - do NOT damage player
+                Debug.Log("Collided with hooked enemy - no damage taken.");
+                return;
+            }
+
+            // Enemy is NOT hooked - apply damage
             Debug.Log("Collided with Enemy! Health -20");
-            //Health -= 20;
+            Health -= 20;
+            UpdateHealthUI();
 
-            // Destroy the active grappling hook belonging to this player
+            if (Health <= 0)
+            {
+                ShowGameOver();
+            }
+
             DestroyActiveGrapplingHook();
-
-            // Optionally apply a small upward force to the player (uncomment if you want)
-            // rb.AddForce(Vector3.up * 5f, ForceMode.Impulse);
         }
     }
 
-   public void DestroyActiveGrapplingHook()
+    public void DestroyActiveGrapplingHook()
     {
-        // Find all grappling hooks in the scene
         grapplingHook[] hooks = FindObjectsOfType<grapplingHook>();
 
         foreach (var hook in hooks)
         {
-            // Check if the hook belongs to this player
             if (hook.player == this.transform)
             {
                 Destroy(hook.gameObject);
-                Debug.Log("Destroyed grappling hook on collision with enemy");
             }
         }
     }
 
-    void ShowGameOver()
+   public void ShowGameOver()
     {
         if (gameOverScreen != null)
         {
             gameOverScreen.SetActive(true); // Show Game Over UI
             gamescreen.SetActive(false);
             Health = 100;
+            UpdateHealthUI(); // Reset health text
         }
+    }
 
-        // Optionally stop player movement and shooting
-        // Time.timeScale = 0f; // Freeze the game
+    void UpdateHealthUI()
+    {
+        if (healthText != null)
+        {
+            healthText.text = "Health: " + Health.ToString();
+        }
     }
 }
