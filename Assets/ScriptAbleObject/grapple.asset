@@ -17,9 +17,11 @@ MonoBehaviour:
   maxClipSize: 3
   bulletSpeed: 70.9
   ShootFreq: 2.74
-  currentClipSize: 2
+  IsReloading: 0
+  reloadTimer: 0
+  currentClipSize: 3
   shootCooldown: 0.88
-  cooldownTimer: -0.0020528429
+  cooldownTimer: 0
   fireMode: 0
   burstCount: 0
   grapplingHookPrefab: {fileID: 1150020080090705670, guid: 33db7e58ab6e1e946a775e15494a8b7d, type: 3}

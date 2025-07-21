@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 public enum FireMode
 {
     SemiAuto,
@@ -8,20 +7,20 @@ public enum FireMode
     Burst
 }
 
-
-
 public abstract class GunSO : ScriptableObject
 {
     public GameObject BulletPrefab;
     public float reloadTime;
     public int maxClipSize;
     public float bulletSpeed;
-    public float ShootFreq;
+    public float ShootFreq; // for burst or auto-fire
+    public bool IsReloading;
+    public float reloadTimer = 0f;
 
     [HideInInspector]
     public int currentClipSize;
 
-    public float shootCooldown; // cooldown between shots
+    public float shootCooldown; // cooldown between shots / bursts
     [HideInInspector]
     public float cooldownTimer;
 

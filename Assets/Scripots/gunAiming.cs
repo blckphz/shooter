@@ -14,6 +14,7 @@ public class gunAiming : MonoBehaviour
     public float zoomSpeed = 10f;
     public GunBehaviour gunBehaviour;
 
+    public GameObject someOtherUI;
 
     private float xRotation = 0f;
 
@@ -32,8 +33,21 @@ public class gunAiming : MonoBehaviour
 
     void Update()
     {
-        // Stop aiming if dead or Game Over screen active
-        if (PlayerHealth.Health <= 0 || (gameOverScreen != null && gameOverScreen.activeSelf))
+        /*
+
+        // If the gameOverScreen or another UI panel is active, stop aiming and unlock cursor
+        if ((gameOverScreen != null && gameOverScreen.activeSelf) ||
+            (someOtherUI != null && someOtherUI.activeSelf)) // <- Replace 'someOtherUI' with your GameObject
+        {
+            LockCursor(false);
+            return; // Skip the rest of the aiming logic
+        }
+
+
+        */
+
+        // Stop aiming if dead
+        if (PlayerHealth.Health <= 0)
         {
             LockCursor(false);
             return;
@@ -72,6 +86,7 @@ public class gunAiming : MonoBehaviour
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, normalFOV, Time.deltaTime * zoomSpeed);
         }
     }
+
 
     void LockCursor(bool shouldLock)
     {

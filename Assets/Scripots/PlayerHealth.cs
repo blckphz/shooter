@@ -5,7 +5,6 @@ public class PlayerHealth : MonoBehaviour
 {
     public static int Health = 100; // Start with 100 health
     public CapsuleCollider capsule;
-    public GameObject gameOverScreen, gamescreen; // Assign in Inspector
     public TextMeshProUGUI healthText; // Reference to TextMeshPro text
 
     private stateManager stateManager;
@@ -13,15 +12,15 @@ public class PlayerHealth : MonoBehaviour
 
     void Start()
     {
+        if (healthText == null)
+        {
+        healthText = GameObject.Find("hp").GetComponent<TextMeshProUGUI>();
+                }
+
         Debug.Log(Health);
 
         capsule = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>(); // Get Rigidbody for physics force
-
-        if (gameOverScreen != null)
-        {
-            gameOverScreen.SetActive(false); // Hide at start
-        }
 
         UpdateHealthUI(); // Initialize UI
     }
@@ -69,13 +68,6 @@ public class PlayerHealth : MonoBehaviour
 
    public void ShowGameOver()
     {
-        if (gameOverScreen != null)
-        {
-            gameOverScreen.SetActive(true); // Show Game Over UI
-            gamescreen.SetActive(false);
-            Health = 100;
-            UpdateHealthUI(); // Reset health text
-        }
     }
 
     void UpdateHealthUI()

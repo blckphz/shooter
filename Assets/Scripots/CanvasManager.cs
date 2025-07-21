@@ -3,15 +3,23 @@ using TMPro;
 
 public class CanvasManager : MonoBehaviour
 {
-    public GunBehaviour gun;                  // Reference to GunBehaviour
+    public GunBehaviour gunReload;               // Reference to GunReload (added)
     public TextMeshProUGUI ammoText;          // Assign in Inspector
     public TextMeshProUGUI playerHealthText;  // Assign in Inspector
 
     void Update()
     {
-        if (gun != null && gun.currentGunso != null)
+
+        if (gunReload == null)
         {
-            ammoText.text = $"{gun.currentGunso.currentClipSize} / {gun.currentGunso.maxClipSize}";
+
+            gunReload = GameObject.Find("Gun").GetComponent<GunBehaviour>();
+
+        }
+
+        if (gunReload != null && gunReload.currentGunso != null)
+        {
+            ammoText.text = $"{gunReload.currentGunso.currentClipSize} / {gunReload.currentGunso.maxClipSize}";
         }
 
         // Display static health directly
@@ -20,6 +28,7 @@ public class CanvasManager : MonoBehaviour
 
     public bool gunsoIsReloading()
     {
-        return gun != null && gun.IsReloading;
+        // Check GunReload's IsReloading now
+        return gunReload != null && gunReload.currentGunso.IsReloading;
     }
 }

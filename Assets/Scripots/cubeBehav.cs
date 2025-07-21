@@ -5,7 +5,7 @@ public class cubeBehav : MonoBehaviour
     [Header("Jump Settings")]
     public float jumpStrength = 8f;
     public bool destroyOnHit = true;
-    public float activationDelay = 0.000001f; // Delay before it can trigger
+    public float activationDelay = 0.5f; // Delay before it can trigger (0.5 seconds)
 
     private bool isActive = false;
     private Collider cubeCollider;

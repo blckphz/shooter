@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using static Pathfinding.Util.RetainedGizmos;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMove : MonoBehaviour
@@ -43,6 +44,9 @@ public class PlayerMove : MonoBehaviour
         // Optional safety settings:
         // rb.freezeRotation = true; // Uncomment to prevent tipping over.
         rb.interpolation = RigidbodyInterpolation.Interpolate; // Smoother visual motion.
+
+
+        dashcd = GameObject.Find("Dashes").GetComponent<Image>();
     }
 
     void Update()

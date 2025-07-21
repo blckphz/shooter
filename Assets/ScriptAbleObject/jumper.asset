@@ -17,8 +17,10 @@ MonoBehaviour:
   maxClipSize: 4
   bulletSpeed: 12.9
   ShootFreq: 0.52
-  currentClipSize: 0
+  IsReloading: 0
+  reloadTimer: 0
+  currentClipSize: 2
   shootCooldown: 0.48
-  cooldownTimer: 0.0014947082
+  cooldownTimer: 0.4959929
   fireMode: 1
   burstCount: 3
