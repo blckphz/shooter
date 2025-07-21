@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7730095147000345537}
   - component: {fileID: 3420902932420094453}
   - component: {fileID: 8456740928244175558}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: teleBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

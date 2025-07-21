@@ -1,0 +1,138 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class GunBehaviour : MonoBehaviour
+{
+    public GunSO[] guns;
+    public int currentGunIndex = 0;
+    public GunSO currentGunso;
+    public Transform spawnPoint;
+
+    [Header("Scale Settings")]
+    public float gunXScale = 1f;
+    public float gun2XScale = 2f;
+    public float gun3YScale = 1.5f;
+
+    [Header("Materials for guns (4 slots)")]
+    public Material[] gunMaterials = new Material[4];
+
+    [Header("Gun Renderer (Assign if static gun model)")]
+    public MeshRenderer gunRenderer;
+
+    public GameObject extraObject;
+    private GunReload gunReload;
+
+    private gunShooting gunShooting;
+
+    void Start()
+    {
+        gunReload = GetComponent<GunReload>();
+        gunShooting = GetComponent<gunShooting>();
+
+        if (guns.Length > 0)
+        {
+            currentGunIndex = 0;
+            SwitchGun(guns[currentGunIndex]);
+        }
+        else
+        {
+            Debug.LogWarning("No guns assigned to the guns array!");
+        }
+    }
+
+    void Update()
+    {
+        if (currentGunso == null) return;
+
+        // Handle cooldown timer
+        if (currentGunso.cooldownTimer > 0f)
+            currentGunso.cooldownTimer -= Time.deltaTime;
+
+        // Reduce cooldown faster while reloading
+        if (currentGunso.IsReloading && currentGunso.cooldownTimer > 0f)
+        {
+            currentGunso.cooldownTimer = Mathf.Max(0f, currentGunso.cooldownTimer - Time.deltaTime * 2f);
+        }
+
+        // Manual reload input
+        if (Input.GetKeyDown(KeyCode.R) && !currentGunso.IsReloading && currentGunso.currentClipSize < currentGunso.maxClipSize)
+        {
+            gunReload.StartReload(currentGunso);
+        }
+
+        // Stop auto shooting when fire button released (not burst)
+        if (Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire2"))
+        {
+            gunShooting.StopShootingCoroutines();
+        }
+
+        // Always delegate shooting input to gunShooting (including PortalGun)
+        gunShooting.HandleShootingInput(currentGunso);
+    }
+
+    public void SwitchGun(GunSO newGun)
+    {
+        if (newGun == null) return;
+
+        gunShooting.StopShootingCoroutines();
+
+        currentGunso = newGun;
+        InitializeGun(currentGunso);
+
+        ApplyGunMaterial(currentGunIndex);
+        ApplyGunScale(currentGunIndex);
+
+        Debug.Log($"Switched to gun: {currentGunso.name}");
+    }
+
+    private void InitializeGun(GunSO gun)
+    {
+        if (gun.currentClipSize == 0)
+        {
+            gun.currentClipSize = gun.maxClipSize;
+        }
+    }
+
+    private void ApplyGunMaterial(int gunIndex)
+    {
+        if (gunRenderer == null)
+        {
+            Debug.LogWarning("Gun Renderer is not assigned in the inspector!");
+            return;
+        }
+
+        if (gunIndex >= 0 && gunIndex < gunMaterials.Length && gunMaterials[gunIndex] != null)
+        {
+            gunRenderer.material = gunMaterials[gunIndex];
+        }
+        else
+        {
+            Debug.LogWarning($"No material assigned for gun index {gunIndex}");
+        }
+    }
+
+    private void ApplyGunScale(int gunIndex)
+    {
+        if (gunRenderer == null) return;
+
+        Vector3 baseScale = Vector3.one;
+
+        switch (gunIndex)
+        {
+            case 0:
+                baseScale = new Vector3(gunXScale, 1f, 1f);
+                break;
+            case 1:
+                baseScale = new Vector3(gun2XScale, 1f, 1f);
+                break;
+            case 2:
+                baseScale = new Vector3(1f, gun3YScale, 1f);
+                break;
+            default:
+                baseScale = Vector3.one;
+                break;
+        }
+
+        gunRenderer.transform.localScale = baseScale;
+    }
+}
