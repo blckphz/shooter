@@ -19,10 +19,22 @@ public class NPC : MonoBehaviour
             }
             else
             {
-                inkHandler.ContinueStory();  // Progress through story
+                if (!inkHandler.IsStoryFinished())
+                {
+                    inkHandler.ContinueStory();  // Progress through story
+                }
+                else
+                {
+                    // End story
+                    dialogueStarted = false;
+                    inkHandler.ResetUI();
+                    Debug.Log("Story finished!");
+                }
             }
         }
     }
+
+
 
     private void OnTriggerEnter(Collider other)
     {

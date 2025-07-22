@@ -8,23 +8,21 @@ public class gunAiming : MonoBehaviour
     public Transform gunPivot;
     public GameObject gameOverScreen;
 
-    // Zoom parameters
     public float zoomedFOV = 30f;
     public float normalFOV = 60f;
     public float zoomSpeed = 10f;
     public GunBehaviour gunBehaviour;
 
     public GameObject someOtherUI;
-    public ColliderGameOver groundCheck; // <-- Assign in Inspector
+    public ColliderGameOver groundCheck;
 
     private float xRotation = 0f;
     private Camera cam;
+    public bool isLocked;
 
     void Start()
     {
-
         groundCheck = GameObject.Find("Terrain").GetComponent<ColliderGameOver>();
-
         LockCursor(true);
         cam = Camera.main;
         if (cam != null)
@@ -35,6 +33,11 @@ public class gunAiming : MonoBehaviour
 
     void Update()
     {
+        if (!isLocked)
+        {
+            return;
+        }
+
         if (PlayerHealth.Health <= 0)
         {
             LockCursor(false);
@@ -59,7 +62,6 @@ public class gunAiming : MonoBehaviour
 
         bool isRightMouseHeld = Input.GetMouseButton(1);
 
-        // FOV zoom logic
         if (gunBehaviour.currentGunIndex == 0)
         {
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView,
@@ -71,7 +73,6 @@ public class gunAiming : MonoBehaviour
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, normalFOV, Time.deltaTime * zoomSpeed);
         }
 
-        // --- TIMESCALE LOGIC ---
         bool isPistolEquipped = gunBehaviour.currentGunIndex == 0;
         bool isAirborne = !groundCheck.isGrounded;
 
@@ -97,8 +98,9 @@ public class gunAiming : MonoBehaviour
         Time.fixedDeltaTime = 0.02f;
     }
 
-    void LockCursor(bool shouldLock)
+    public void LockCursor(bool shouldLock)
     {
+        isLocked = shouldLock;
         Cursor.lockState = shouldLock ? CursorLockMode.Locked : CursorLockMode.None;
         Cursor.visible = !shouldLock;
     }
