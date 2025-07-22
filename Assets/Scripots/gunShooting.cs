@@ -12,6 +12,7 @@ public class gunShooting : MonoBehaviour
 
     private AudioSource audioSource;
     private screenShake screenShakeEffect;
+    private ColliderGameOver playerGroundCheck;
 
     void Start()
     {
@@ -29,6 +30,13 @@ public class gunShooting : MonoBehaviour
         if (screenShakeEffect == null)
         {
             Debug.LogWarning("No screenShake component found in the scene!");
+        }
+
+        // Find the player's ground state tracker
+        playerGroundCheck = FindObjectOfType<ColliderGameOver>();
+        if (playerGroundCheck == null)
+        {
+            Debug.LogWarning("No ColliderGameOver component found in the scene!");
         }
     }
 
@@ -111,7 +119,13 @@ public class gunShooting : MonoBehaviour
             screenShakeEffect.Shake(0.7f, 0.15f);
         }
 
-        portalGun.cooldownTimer = portalGun.shootCooldown;
+        // Apply airborne cooldown reduction
+        float cooldown = portalGun.shootCooldown;
+        if (playerGroundCheck != null && !playerGroundCheck.isGrounded)
+        {
+            cooldown *= (1f - portalGun.cooldownRedux);
+        }
+        portalGun.cooldownTimer = cooldown;
 
         if (portalGun.currentClipSize <= 0 && !portalGun.IsReloading)
         {
@@ -153,13 +167,18 @@ public class gunShooting : MonoBehaviour
         // Screen shake for normal shots
         if (screenShakeEffect != null)
         {
-            float shakeStrength = 1.0f; // Example: stronger shake for shotguns
+            float shakeStrength = 1.0f;
             screenShakeEffect.Shake(shakeStrength, 0.2f);
         }
 
         if (currentGunso.fireMode == FireMode.SemiAuto)
         {
-            currentGunso.cooldownTimer = currentGunso.shootCooldown;
+            float cooldown = currentGunso.shootCooldown;
+            if (playerGroundCheck != null && !playerGroundCheck.isGrounded)
+            {
+                cooldown *= (1f - currentGunso.cooldownRedux);
+            }
+            currentGunso.cooldownTimer = cooldown;
         }
 
         currentGunso.ShootGun(gunBehaviour.spawnPoint, currentGunso.bulletSpeed);
@@ -183,11 +202,24 @@ public class gunShooting : MonoBehaviour
             TryShoot(currentGunso);
 
             shotsFired++;
-            currentGunso.cooldownTimer = 1f / currentGunso.ShootFreq;
+
+            float cooldown = 1f / currentGunso.ShootFreq;
+            if (playerGroundCheck != null && !playerGroundCheck.isGrounded)
+            {
+                cooldown *= (1f - currentGunso.cooldownRedux);
+            }
+            currentGunso.cooldownTimer = cooldown;
+
             yield return null;
         }
 
-        currentGunso.cooldownTimer = currentGunso.shootCooldown;
+        float burstCooldown = currentGunso.shootCooldown;
+        if (playerGroundCheck != null && !playerGroundCheck.isGrounded)
+        {
+            burstCooldown *= (1f - currentGunso.cooldownRedux);
+        }
+        currentGunso.cooldownTimer = burstCooldown;
+
         isBurstShooting = false;
         burstShootCoroutine = null;
     }
@@ -199,12 +231,24 @@ public class gunShooting : MonoBehaviour
             if (currentGunso.cooldownTimer <= 0f)
             {
                 TryShoot(currentGunso);
-                currentGunso.cooldownTimer = 1f / currentGunso.ShootFreq;
+
+                float cooldown = 1f / currentGunso.ShootFreq;
+                if (playerGroundCheck != null && !playerGroundCheck.isGrounded)
+                {
+                    cooldown *= (1f - currentGunso.cooldownRedux);
+                }
+                currentGunso.cooldownTimer = cooldown;
             }
             yield return null;
         }
 
-        currentGunso.cooldownTimer = currentGunso.shootCooldown;
+        float autoCooldown = currentGunso.shootCooldown;
+        if (playerGroundCheck != null && !playerGroundCheck.isGrounded)
+        {
+            autoCooldown *= (1f - currentGunso.cooldownRedux);
+        }
+        currentGunso.cooldownTimer = autoCooldown;
+
         isBurstShooting = false;
         autoShootCoroutine = null;
     }

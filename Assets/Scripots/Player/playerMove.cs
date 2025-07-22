@@ -34,7 +34,6 @@ public class PlayerMove : MonoBehaviour
     public grapplingHook activeHook;       // Current grappling hook reference
 
     [Header("Audio")]
-    public AudioClip reelInSound;          // Assign reel-in sound clip here
     private AudioSource audioSource;
 
     // --- Private state ---
@@ -182,13 +181,6 @@ public class PlayerMove : MonoBehaviour
         hookPoint = point;
         isDashing = false;
 
-        // Play reel-in sound if assigned and not already playing
-        if (reelInSound != null && !audioSource.isPlaying)
-        {
-            audioSource.clip = reelInSound;
-            audioSource.loop = true;  // Loop the sound while pulling
-            audioSource.Play();
-        }
     }
 
     // Called to stop pulling player (e.g., when hook detaches)
@@ -196,12 +188,7 @@ public class PlayerMove : MonoBehaviour
     {
         isHooked = false;
 
-        // Stop reel-in sound if playing
-        if (audioSource.isPlaying && audioSource.clip == reelInSound)
-        {
             audioSource.Stop();
-            audioSource.loop = false;
-        }
     }
 
     // Pull player toward hook point smoothly
@@ -212,6 +199,9 @@ public class PlayerMove : MonoBehaviour
 
         if (distance > 0.5f)
         {
+
+            activeHook.grapplingAudio.Play();
+
             direction.Normalize();
             Vector3 pullVelocity = direction * hookPullSpeed;
 

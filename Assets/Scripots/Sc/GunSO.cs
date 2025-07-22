@@ -12,10 +12,12 @@ public abstract class GunSO : ScriptableObject
     public GameObject BulletPrefab;
     public float reloadTime;
     public int maxClipSize;
+    public int currentReserveAmmo;
     public float bulletSpeed;
     public float ShootFreq; // for burst or auto-fire
     public bool IsReloading;
     public float reloadTimer = 0f;
+    public float cooldownRedux;
 
     [HideInInspector]
     public int currentClipSize;

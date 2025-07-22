@@ -34,10 +34,23 @@ public class GunReload : MonoBehaviour
                 gun.reloadTimer += Time.deltaTime;
                 if (gun.reloadTimer >= gun.reloadTime)
                 {
-                    gun.currentClipSize = gun.maxClipSize;
+                    int ammoNeeded = gun.maxClipSize - gun.currentClipSize;
+
+                    if (gun.currentReserveAmmo >= ammoNeeded)
+                    {
+                        gun.currentReserveAmmo -= ammoNeeded;
+                        gun.currentClipSize = gun.maxClipSize;
+                    }
+                    else
+                    {
+                        // Add all remaining reserve ammo if less than needed
+                        gun.currentClipSize += gun.currentReserveAmmo;
+                        gun.currentReserveAmmo = 0;
+                    }
+
                     gun.IsReloading = false;
                     gun.reloadTimer = 0f;
-                    Debug.Log($"{gun.name} reload complete!");
+                    Debug.Log($"{gun.name} reload complete! Clip: {gun.currentClipSize}, Reserve: {gun.currentReserveAmmo}");
 
                     // Play reload complete sound
                     if (audioSource != null && gun.reloadCompleteSound != null)
@@ -60,7 +73,17 @@ public class GunReload : MonoBehaviour
 
     public void StartReload(GunSO gun)
     {
-        if (gun == null || gun.currentClipSize == gun.maxClipSize) return;
+        if (gun == null) return;
+
+        if (gun.currentClipSize == gun.maxClipSize)
+            return;
+
+        if (gun.currentReserveAmmo <= 0)
+        {
+            Debug.Log("No reserve ammo left to reload!");
+            return;
+        }
+
         if (!gun.IsReloading)
         {
             gun.IsReloading = true;

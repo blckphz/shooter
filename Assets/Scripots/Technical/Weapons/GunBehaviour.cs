@@ -40,35 +40,47 @@ public class GunBehaviour : MonoBehaviour
         }
     }
 
-    void Update()
+void Update()
+{
+    if (currentGunso == null) return;
+
+    // Adjust cooldownTimer
+    if (currentGunso.cooldownTimer > 0f)
     {
-        if (currentGunso == null) return;
+        float reductionSpeed = 1f;
 
-        // Handle cooldown timer
-        if (currentGunso.cooldownTimer > 0f)
-            currentGunso.cooldownTimer -= Time.deltaTime;
-
-        // Reduce cooldown faster while reloading
-        if (currentGunso.IsReloading && currentGunso.cooldownTimer > 0f)
+        // Faster cooldown reduction when airborne
+        ColliderGameOver playerGroundCheck = FindObjectOfType<ColliderGameOver>();
+        if (playerGroundCheck != null && !playerGroundCheck.isGrounded)
         {
-            currentGunso.cooldownTimer = Mathf.Max(0f, currentGunso.cooldownTimer - Time.deltaTime * 2f);
+            reductionSpeed += currentGunso.cooldownRedux; // Apply the bonus
         }
 
-        // Manual reload input
-        if (Input.GetKeyDown(KeyCode.R) && !currentGunso.IsReloading && currentGunso.currentClipSize < currentGunso.maxClipSize)
-        {
-            gunReload.StartReload(currentGunso);
-        }
-
-        // Stop auto shooting when fire button released (not burst)
-        if (Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire2"))
-        {
-            gunShooting.StopShootingCoroutines();
-        }
-
-        // Always delegate shooting input to gunShooting (including PortalGun)
-        gunShooting.HandleShootingInput(currentGunso);
+        currentGunso.cooldownTimer -= Time.deltaTime * reductionSpeed;
     }
+
+    // Reduce cooldown faster while reloading
+    if (currentGunso.IsReloading && currentGunso.cooldownTimer > 0f)
+    {
+        currentGunso.cooldownTimer = Mathf.Max(0f, currentGunso.cooldownTimer - Time.deltaTime * 2f);
+    }
+
+    // Manual reload input
+    if (Input.GetKeyDown(KeyCode.R) && !currentGunso.IsReloading && currentGunso.currentClipSize < currentGunso.maxClipSize)
+    {
+        gunReload.StartReload(currentGunso);
+    }
+
+    // Stop auto shooting when fire button released (not burst)
+    if (Input.GetButtonUp("Fire1"))
+    {
+        gunShooting.StopShootingCoroutines();
+    }
+
+    // Always delegate shooting input to gunShooting (including PortalGun)
+    gunShooting.HandleShootingInput(currentGunso);
+}
+
 
     public void SwitchGun(GunSO newGun)
     {

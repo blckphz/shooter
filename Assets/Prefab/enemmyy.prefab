@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 177687931445366716}
   - component: {fileID: 736465137917267790}
   - component: {fileID: 7932715210526632411}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 4295783340418394733}
   - component: {fileID: 8773854357749356015}
   - component: {fileID: 4975492833161357678}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: enemmyy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -250,9 +250,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.74339294
-  m_Height: 2.5532665
+  m_Height: 2.6408253
   m_Direction: 1
-  m_Center: {x: -0.04849243, y: -0.12597656, z: 0.029168963}
+  m_Center: {x: -0.04849243, y: -0.08219719, z: 0.029168963}
 --- !u!114 &3325569957564425884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,6 +343,7 @@ MonoBehaviour:
   boostBonus: 43.53
   damageOnHit: 20
   grappedDuration: 0.5
+  currentHook: {fileID: 0}
 --- !u!114 &8773854357749356015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,7 +383,7 @@ GameObject:
   - component: {fileID: 4141950741550443791}
   - component: {fileID: 1670357772821938668}
   - component: {fileID: 7455440747289562356}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

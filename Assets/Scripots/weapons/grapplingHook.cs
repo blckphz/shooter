@@ -10,19 +10,25 @@ public class grapplingHook : MonoBehaviour
     public float idleTimeBeforeDetach = 1f;
     public float velocityThreshold = 0.1f;
 
+    [Header("Audio Settings")]
+    public AudioSource grapplingAudio; // Looping sound for when hook is attached
+
     private bool isAttached = false;
     private Rigidbody rb;
     private Vector3 hitPoint;
     private float idleTimer = 0f;
-    private enemyMove grabbedEnemy; // Reference to enemy
+    private enemyMove grabbedEnemy;
 
-    public bool IsAttached => isAttached; // Public getter for isAttached
+    public bool IsAttached => isAttached;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         line = GetComponent<LineRenderer>();
         if (line != null) line.positionCount = 2;
+
+        if (grapplingAudio != null)
+            grapplingAudio.loop = true; // Ensure it's looping
     }
 
     void Update()
@@ -47,18 +53,7 @@ public class grapplingHook : MonoBehaviour
         {
             PullPlayer();
             CheckIdle();
-
-            // Notify player script that pulling started
-            PlayerMove playerMove = player.GetComponent<PlayerMove>();
-            if (playerMove != null && !playerMove.isHooked)
-            {
-                playerMove.StartHookPull(hitPoint);
-            }
-
-
         }
-
-
     }
 
     void OnCollisionEnter(Collision collision)
@@ -86,6 +81,8 @@ public class grapplingHook : MonoBehaviour
                 grabbedEnemy.OnHookAttach(this);
                 Debug.Log("[GrapplingHook] Hook attached to enemy: " + collision.gameObject.name);
             }
+
+            // Start playing sound when attached
         }
     }
 
@@ -96,12 +93,14 @@ public class grapplingHook : MonoBehaviour
         {
             Vector3 direction = (hitPoint - player.position).normalized;
             playerRb.linearVelocity = direction * pullSpeed;
+            grapplingAudio.Play();
         }
 
         if (Vector3.Distance(player.position, hitPoint) < 2f)
         {
             Debug.Log("[GrapplingHook] Player reached hook point, detaching.");
             Detach();
+            grapplingAudio.Stop();
         }
     }
 
@@ -132,13 +131,6 @@ public class grapplingHook : MonoBehaviour
     public void Detach()
     {
         Debug.Log("[GrapplingHook] Detach called.");
-
-        PlayerMove playerMove = player.GetComponent<PlayerMove>();
-        if (playerMove != null)
-        {
-            playerMove.StopHookPull();
-        }
-
         if (grabbedEnemy != null)
         {
             grabbedEnemy.OnHookDetach();
@@ -146,7 +138,10 @@ public class grapplingHook : MonoBehaviour
             grabbedEnemy = null;
         }
 
+        // Stop sound when detaching
+        if (grapplingAudio != null && grapplingAudio.isPlaying)
+            grapplingAudio.Stop();
+
         Destroy(gameObject);
     }
-
 }

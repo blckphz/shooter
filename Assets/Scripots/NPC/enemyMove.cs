@@ -164,19 +164,28 @@ public class enemyMove : MonoBehaviour
 
         currentHook = hook;
 
+        // Make the hook object a child of this enemy
+        if (currentHook != null)
+        {
+            currentHook.transform.SetParent(transform);
+            currentHook.transform.localPosition = Vector3.zero; // Optional: reset position relative to enemy
+        }
+
         if (ungrappleCoroutine != null)
         {
             StopCoroutine(ungrappleCoroutine);
             ungrappleCoroutine = null;
         }
 
-        Debug.Log("[EnemyMove] Enemy hooked!");
+        Debug.Log("[EnemyMove] Enemy hooked! Hook set as child.");
     }
+
 
     public void OnHookDetach()
     {
         if (currentHook != null)
         {
+            currentHook.transform.SetParent(null); // Unparent the hook
             currentHook = null;
         }
 

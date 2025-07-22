@@ -19,7 +19,7 @@ public class CanvasManager : MonoBehaviour
 
         if (gunReload != null && gunReload.currentGunso != null)
         {
-            ammoText.text = $"{gunReload.currentGunso.currentClipSize} / {gunReload.currentGunso.maxClipSize}";
+            ammoText.text = $"{gunReload.currentGunso.currentClipSize} / {gunReload.currentGunso.currentReserveAmmo}";
         }
 
         // Display static health directly
