@@ -70,6 +70,7 @@ public abstract class GunSO : ScriptableObject
     public AudioClip soundFx;
 
     [Tooltip("Sound played when the reload is complete.")]
+    public AudioClip reloadStartSound;
     public AudioClip reloadCompleteSound;
 
 

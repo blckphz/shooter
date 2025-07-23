@@ -8,8 +8,9 @@ public class FlameThrowerSO : GunSO
     public float ammoDrainRate = 10f;      // Ammo consumed per second
     public float damagePerSecond = 15f;    // Damage applied per second
     public float x, y, z;
+    public AudioClip stioFlame;
 
-   public override void ShootGun(Transform spawnPoint, float bulletSpeed)
+    public override void ShootGun(Transform spawnPoint, float bulletSpeed)
 {
     // Instantiate flame projectile
     GameObject bullet = Instantiate(BulletPrefab, spawnPoint.position, spawnPoint.rotation);

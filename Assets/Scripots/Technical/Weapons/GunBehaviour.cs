@@ -73,17 +73,28 @@ public class GunBehaviour : MonoBehaviour
             gunReload.StartReload(currentGunso);
         }
 
-        // Stop auto shooting when fire button released (not burst)
-        if (Input.GetButtonUp("Fire1"))
-        {
-            gunShooting.StopShootingCoroutines();
+      if (Input.GetButtonDown("Fire1"))
+{
+    if (flameThrowerBehaviour != null)
+    {
+        Debug.Log("Fire1 pressed, starting flame.");
+        flameThrowerBehaviour.StartFlame();
+    }
+}
 
-            // Stop flame if current gun is a flamethrower
-            if (flameThrowerBehaviour != null)
-            {
-                //flameThrowerBehaviour.StopFlame();
-            }
-        }
+if (Input.GetButtonUp("Fire1"))
+{
+    gunShooting.StopShootingCoroutines();
+
+    if (flameThrowerBehaviour != null)
+    {
+        Debug.Log("Fire1 released, stopping flame.");
+        flameThrowerBehaviour.StopFlame();
+    }
+}
+
+
+
 
         // Always delegate shooting input to gunShooting (including PortalGun)
         gunShooting.HandleShootingInput(currentGunso);

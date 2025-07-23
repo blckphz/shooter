@@ -13,18 +13,20 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   BulletPrefab: {fileID: 8156807615867147180, guid: 275f4d103c0c30b49ae0e8e4f900b5b5, type: 3}
-  reloadTime: 2.15
-  maxClipSize: 85
-  currentReserveAmmo: 8
+  damage: 0
   bulletSpeed: 59.5
-  ShootFreq: 2.73
+  fireMode: 1
+  maxClipSize: 85
+  currentClipSize: 55
+  currentReserveAmmo: 5
+  reloadTime: 2.15
   IsReloading: 0
   reloadTimer: 0
+  ShootFreq: 2.73
   cooldownRedux: 0.48
-  currentClipSize: 85
   shootCooldown: 0.1
-  cooldownTimer: -0.00165701
-  fireMode: 1
+  cooldownTimer: -0.00040788273
   burstCount: 3
   soundFx: {fileID: 8300000, guid: 2f0fe006d99591f45a152f6d296e0dbe, type: 3}
+  reloadStartSound: {fileID: 8300000, guid: d2813acb473265d47a4c96a2a9c9e28d, type: 3}
   reloadCompleteSound: {fileID: 8300000, guid: 5880d84cc96a78d42a438d170fcf3008, type: 3}

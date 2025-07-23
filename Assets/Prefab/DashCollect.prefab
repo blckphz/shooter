@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 6088938269732186355}
   - component: {fileID: 8514213012256224709}
   - component: {fileID: 1140650327052335828}
-  - component: {fileID: -596160162006403975}
   - component: {fileID: -3837156593469590823}
   - component: {fileID: -4912159217542305611}
+  - component: {fileID: 899330051118125134}
   m_Layer: 0
   m_Name: DashCollect
   m_TagString: Untagged
@@ -111,22 +111,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-596160162006403975
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 949134128866829941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 940763dcaeec2144b8b8dbff5a0c83c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rb: {fileID: -3837156593469590823}
-  hoverSpeed: 2
-  hoverHeight: 0.5
-  boostBonus: 23.6
 --- !u!54 &-3837156593469590823
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -176,3 +160,15 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &899330051118125134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949134128866829941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a865849b45fb19240838805b2fe84678, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

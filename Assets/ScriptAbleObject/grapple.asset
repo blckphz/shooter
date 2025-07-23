@@ -13,19 +13,21 @@ MonoBehaviour:
   m_Name: grapple
   m_EditorClassIdentifier: 
   BulletPrefab: {fileID: 1150020080090705670, guid: 33db7e58ab6e1e946a775e15494a8b7d, type: 3}
-  reloadTime: 3.24
+  damage: 0
+  bulletSpeed: 72.9
+  fireMode: 0
   maxClipSize: 3
-  currentReserveAmmo: 31
-  bulletSpeed: 70.9
-  ShootFreq: 2.74
+  currentClipSize: 3
+  currentReserveAmmo: 124
+  reloadTime: 3.24
   IsReloading: 0
   reloadTimer: 0
+  ShootFreq: 2.74
   cooldownRedux: 0
-  currentClipSize: 2
   shootCooldown: 0.88
-  cooldownTimer: -0.0007310938
-  fireMode: 0
+  cooldownTimer: 0
   burstCount: 0
-  soundFx: {fileID: 8300000, guid: 2f0fe006d99591f45a152f6d296e0dbe, type: 3}
+  soundFx: {fileID: 8300000, guid: 3a8581591c2646c40a211c31aa7b49a9, type: 3}
+  reloadStartSound: {fileID: 8300000, guid: d2813acb473265d47a4c96a2a9c9e28d, type: 3}
   reloadCompleteSound: {fileID: 8300000, guid: 5880d84cc96a78d42a438d170fcf3008, type: 3}
   grapplingHookPrefab: {fileID: 1150020080090705670, guid: 33db7e58ab6e1e946a775e15494a8b7d, type: 3}

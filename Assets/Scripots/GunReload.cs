@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class GunReload : MonoBehaviour
@@ -50,8 +50,7 @@ public class GunReload : MonoBehaviour
 
                     gun.IsReloading = false;
                     gun.reloadTimer = 0f;
-                    Debug.Log($"{gun.name} reload complete! Clip: {gun.currentClipSize}, Reserve: {gun.currentReserveAmmo}");
-
+                
                     // Play reload complete sound
                     if (audioSource != null && gun.reloadCompleteSound != null)
                     {
@@ -87,7 +86,15 @@ public class GunReload : MonoBehaviour
         if (!gun.IsReloading)
         {
             gun.IsReloading = true;
+            gun.reloadTimer = 0f; // Ensure the timer resets properly
             Debug.Log($"Started reloading {gun.name}...");
+
+            // 🔊 Play reload start sound
+            if (audioSource != null && gun.reloadStartSound != null)
+            {
+                audioSource.PlayOneShot(gun.reloadStartSound);
+            }
         }
     }
+
 }

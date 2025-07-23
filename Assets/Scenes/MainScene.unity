@@ -3784,7 +3784,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 8437927821233400401, guid: c0b318093f2ed5946a36f17c96a1ff90, type: 3}
   pickUp: {fileID: 949134128866829941, guid: e84253b7bdae5994fba401ce2066dd4f, type: 3}
-  extraObject: {fileID: 6353399159063990590, guid: 79add2fa5e6c1764fa726076c4ae6776, type: 3}
+  extraObject: {fileID: 949134128866829941, guid: e84253b7bdae5994fba401ce2066dd4f, type: 3}
   mainSpawnInterval: 2
   pickUpSpawnInterval: 5
   extraObjectInterval: 7

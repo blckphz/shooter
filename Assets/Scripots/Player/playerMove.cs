@@ -204,6 +204,10 @@ public class PlayerMove : MonoBehaviour
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
+    public void ResetJumps()
+    {
+        jumpCount = 0; // Reset jump count
+    }
     bool IsGrounded()
     {
         bool grounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, groundLayer);

@@ -20,7 +20,7 @@ public class rayCastScript : MonoBehaviour
             // Check if the hit object has the "Enemy" tag
             if (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("Balloon"))
             {
-                Debug.Log("Ray hit an Enemy: " + hit.collider.name);
+               // Debug.Log("Ray hit an Enemy: " + hit.collider.name);
 
             }
         }

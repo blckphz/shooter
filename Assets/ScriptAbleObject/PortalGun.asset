@@ -13,17 +13,22 @@ MonoBehaviour:
   m_Name: PortalGun
   m_EditorClassIdentifier: 
   BulletPrefab: {fileID: 6759846994078647378, guid: 6f02a6ca99e5a834b8cb83c967338575, type: 3}
-  reloadTime: 4.41
-  maxClipSize: 81
+  damage: 0
   bulletSpeed: 24.6
-  ShootFreq: 2.12
+  fireMode: 0
+  maxClipSize: 81
+  currentClipSize: 72
+  currentReserveAmmo: 61
+  reloadTime: 4.41
   IsReloading: 0
   reloadTimer: 0
-  currentClipSize: 28
+  ShootFreq: 2.12
+  cooldownRedux: 0
   shootCooldown: 0.04
-  cooldownTimer: -0.0018158942
-  fireMode: 0
+  cooldownTimer: -0.0002559037
   burstCount: 0
+  soundFx: {fileID: 0}
+  reloadCompleteSound: {fileID: 0}
   portalProjectilePrefab: {fileID: 6759846994078647378, guid: 6f02a6ca99e5a834b8cb83c967338575, type: 3}
   bluePortalPrefab: {fileID: 244000369166352083, guid: 27eb4acec2c462d429e21c4181d637bf, type: 3}
   orangePortalPrefab: {fileID: 6805268084785665883, guid: 6f126c54ee94201488f22265bb1237ef, type: 3}
