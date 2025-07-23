@@ -91,11 +91,26 @@ void Update()
         currentGunso = newGun;
         InitializeGun(currentGunso);
 
+        // Link flame behaviour if needed
+        if (currentGunso is FlameThrowerSO flameSO)
+        {
+            FlameThrowerBehaviour flameBehav = GetComponentInChildren<FlameThrowerBehaviour>();
+            if (flameBehav != null)
+            {
+                flameSO.SetFlameBehaviour(flameBehav);
+            }
+            else
+            {
+                Debug.LogWarning("[GunBehaviour] No FlameThrowerBehaviour found in children!");
+            }
+        }
+
         ApplyGunMaterial(currentGunIndex);
         ApplyGunScale(currentGunIndex);
 
         Debug.Log($"Switched to gun: {currentGunso.name}");
     }
+
 
     private void InitializeGun(GunSO gun)
     {

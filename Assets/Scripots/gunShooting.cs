@@ -44,6 +44,21 @@ public class gunShooting : MonoBehaviour
     {
         if (currentGunso == null) return;
 
+        // --- Flamethrower Special Handling ---
+        if (currentGunso is FlameThrowerSO flameThrower)
+        {
+            if (Input.GetButton("Fire1") && !currentGunso.IsReloading)
+            {
+                flameThrower.ShootGun(gunBehaviour.spawnPoint, currentGunso.bulletSpeed);
+            }
+            else if (Input.GetButtonUp("Fire1"))
+            {
+                flameThrower.StopFlame();
+            }
+            return;
+        }
+
+        // --- Existing Gun Logic ---
         if (currentGunso is PortalGun portalGun)
         {
             if (Input.GetButtonDown("Fire1") && !currentGunso.IsReloading)
@@ -57,6 +72,7 @@ public class gunShooting : MonoBehaviour
             return;
         }
 
+        // Normal gun shooting
         switch (currentGunso.fireMode)
         {
             case FireMode.SemiAuto:
@@ -83,6 +99,7 @@ public class gunShooting : MonoBehaviour
                 break;
         }
     }
+
 
     private void TryShootPortal(PortalGun portalGun, bool isBlue)
     {

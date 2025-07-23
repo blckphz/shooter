@@ -450,6 +450,7 @@ MonoBehaviour:
   gunBehaviour: {fileID: 5378171401550444776}
   someOtherUI: {fileID: 0}
   groundCheck: {fileID: 0}
+  isLocked: 0
 --- !u!114 &7743558535855733801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -567,6 +568,7 @@ GameObject:
   - component: {fileID: 8401913182631186918}
   - component: {fileID: 4560566039647532106}
   - component: {fileID: 7727305686143219524}
+  - component: {fileID: 8658142403337292150}
   m_Layer: 7
   m_Name: Gun
   m_TagString: Untagged
@@ -605,7 +607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guns:
-  - {fileID: 11400000, guid: 0722768ff0775544a9698c82ca6fc200, type: 2}
+  - {fileID: 11400000, guid: 3d3c2d05bcfd7aa45a50edb0b471f9f2, type: 2}
   - {fileID: 11400000, guid: 11d886e44100fc142b3ed138a239e805, type: 2}
   - {fileID: 11400000, guid: e3d29a261dfaee84aaf7d70d682343f1, type: 2}
   - {fileID: 11400000, guid: 8cbaca22c389d5f4e822f6734f356ffd, type: 2}
@@ -772,6 +774,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8658142403337292150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045099316984669333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8495cf5229a67224a9c967d298d917ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flameParticles: {fileID: 1840958004931582891, guid: 356bbe1147e21c143835952a0915c290, type: 3}
 --- !u!1 &2079429540506263416
 GameObject:
   m_ObjectHideFlags: 0
