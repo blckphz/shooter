@@ -8,6 +8,8 @@ public class PlayerMove : MonoBehaviour
     public float moveSpeed = 5f;
 
     [Header("Jump Settings")]
+    public int maxJumps = 2;  // Allow 2 jumps (1 ground jump + 1 midair jump)
+    public int jumpCount = 0; // Number of jumps done since last grounded
     public float minJumpStrength = 5f;        // Minimum jump force (tap)
     public float maxJumpStrength = 15f;       // Maximum jump force (full charge)
     public float maxJumpChargeTime = 1f;      // Max time to charge jump
@@ -94,6 +96,7 @@ public class PlayerMove : MonoBehaviour
 
         if (!isHooked)
         {
+            // Movement input
             moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
 
             // Dash
@@ -110,10 +113,9 @@ public class PlayerMove : MonoBehaviour
                     StartDash(dashDir);
             }
 
-            // Jump charge logic with freq cooldown:
-            if (Input.GetKeyDown(KeyCode.Space) && jumpTimer >= jumpFreq )
+            // --- Jump Logic ---
+            if (Input.GetKeyDown(KeyCode.Space) && jumpTimer >= jumpFreq && jumpCount < maxJumps)
             {
-                // Start charging jump only if cooldown passed
                 isChargingJump = true;
                 jumpChargeTimer = 0f;
             }
@@ -124,10 +126,11 @@ public class PlayerMove : MonoBehaviour
 
                 if (jumpChargeTimer >= maxJumpChargeTime)
                 {
-                    // Auto jump on full charge
+                    // Full charge auto-jump
                     PerformJump(maxJumpStrength);
-                    jumpTimer = 0f;          // Reset jump cooldown
-                    isChargingJump = false;  // Stop charging
+                    jumpTimer = 0f;
+                    jumpCount = Mathf.Min(jumpCount + 1, maxJumps);
+                    isChargingJump = false;
                 }
             }
 
@@ -138,15 +141,21 @@ public class PlayerMove : MonoBehaviour
                 float jumpForce = Mathf.Lerp(minJumpStrength, maxJumpStrength, chargePercent);
                 PerformJump(jumpForce);
 
-                jumpTimer = 0f;          // Reset jump cooldown
-                isChargingJump = false;  // Stop charging
+                jumpTimer = 0f;
+                jumpCount = Mathf.Min(jumpCount + 1, maxJumps);
+                isChargingJump = false;
             }
         }
         else
         {
             moveInput = Vector3.zero; // Lock movement while hooked
         }
+
+        // Check if grounded to reset jump count
+        if (IsGrounded())
+            jumpCount = 0;
     }
+
 
 
 
@@ -197,7 +206,12 @@ public class PlayerMove : MonoBehaviour
 
     bool IsGrounded()
     {
-        return Physics.Raycast(transform.position, Vector3.down, 1.1f, groundLayer);
+        bool grounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, groundLayer);
+        if (grounded)
+        {
+            jumpCount = 0;  // Reset jump count when touching ground
+        }
+        return grounded;
     }
 
     void StartDash(Vector3 direction)

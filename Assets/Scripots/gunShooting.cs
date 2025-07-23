@@ -44,19 +44,7 @@ public class gunShooting : MonoBehaviour
     {
         if (currentGunso == null) return;
 
-        // --- Flamethrower Special Handling ---
-        if (currentGunso is FlameThrowerSO flameThrower)
-        {
-            if (Input.GetButton("Fire1") && !currentGunso.IsReloading)
-            {
-                flameThrower.ShootGun(gunBehaviour.spawnPoint, currentGunso.bulletSpeed);
-            }
-            else if (Input.GetButtonUp("Fire1"))
-            {
-                flameThrower.StopFlame();
-            }
-            return;
-        }
+  
 
         // --- Existing Gun Logic ---
         if (currentGunso is PortalGun portalGun)
@@ -269,20 +257,41 @@ public class gunShooting : MonoBehaviour
         isBurstShooting = false;
         autoShootCoroutine = null;
     }
-
     void SpawnBullet(GunSO currentGunso)
     {
-        GameObject bullet = Instantiate(currentGunso.BulletPrefab, gunBehaviour.spawnPoint.position, gunBehaviour.spawnPoint.rotation);
+        // Determine bullet spawn rotation and direction
+        Quaternion spawnRotation = gunBehaviour.spawnPoint.rotation;
+        Vector3 direction = gunBehaviour.spawnPoint.forward;
+
+        // If this is a FlameThrowerSO, add random spread based on x and y
+        if (currentGunso is FlameThrowerSO flameThrower)
+        {
+            Vector3 randomSpread = new Vector3(
+                Random.Range(-flameThrower.x, flameThrower.x),  // Horizontal spread
+                Random.Range(-flameThrower.y, flameThrower.y),  // Vertical spread
+                0f
+            );
+
+            // Apply spread in local space
+            direction = gunBehaviour.spawnPoint.forward + gunBehaviour.spawnPoint.TransformDirection(randomSpread);
+            direction.Normalize();  // Keep speed consistent
+            spawnRotation = Quaternion.LookRotation(direction);
+        }
+
+        // Instantiate bullet
+        GameObject bullet = Instantiate(currentGunso.BulletPrefab, gunBehaviour.spawnPoint.position, spawnRotation);
         bullet.transform.Rotate(0f, 0f, 90f);
 
+        // Apply velocity
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.linearVelocity = gunBehaviour.spawnPoint.forward * currentGunso.bulletSpeed;
+            rb.linearVelocity = direction * currentGunso.bulletSpeed;
         }
 
-        Destroy(bullet, 5f);
+        Destroy(bullet, 5f);  // Destroy after 5 seconds
     }
+
 
     public void StopShootingCoroutines()
     {

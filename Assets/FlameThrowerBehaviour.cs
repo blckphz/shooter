@@ -1,38 +1,48 @@
 using UnityEngine;
+using System.Collections;
 
 public class FlameThrowerBehaviour : MonoBehaviour
 {
-    [Header("Flame Particle System (child)")]
-    public ParticleSystem flameParticles;
+    public FlameThrowerSO flameThrowerSO;
+    private Coroutine ammoDrainCoroutine;
+    private float ammoDrainAccumulator = 0f;
 
-    private void Awake()
+    // Enemy detection
+    private void OnTriggerEnter(Collider other)
     {
-        if (flameParticles == null)
+        // Check if the object is tagged as "Enemy"
+        if (other.CompareTag("Enemy"))
         {
-            flameParticles = GetComponent<ParticleSystem>();
-        }
-
-        if (flameParticles == null)
-            Debug.LogError("[FlameThrowerBehaviour] No ParticleSystem found!");
-        else
-            Debug.Log("[FlameThrowerBehaviour] ParticleSystem ready.");
-    }
-
-    public void PlayFlame()
-    {
-        if (flameParticles != null && !flameParticles.isPlaying)
-        {
-            flameParticles.Play();
-            Debug.Log("[FlameThrowerBehaviour] Flame started.");
+            Debug.Log("Enemy entered the flamethrower range!");
+            // Optionally apply damage or start burning
+            ApplyFlameDamage(other.gameObject);
         }
     }
 
-    public void StopFlame()
+    private void OnTriggerStay(Collider other)
     {
-        if (flameParticles != null && flameParticles.isPlaying)
+        if (other.CompareTag("Enemy"))
         {
-            flameParticles.Stop();
-            Debug.Log("[FlameThrowerBehaviour] Flame stopped.");
+            // Damage over time could be applied here
+            Debug.Log("Enemy is within flamethrower range!");
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            Debug.Log("Enemy exited the flamethrower range.");
+        }
+    }
+
+    private void ApplyFlameDamage(GameObject enemy)
+    {
+        // Example of applying damage if enemy has a health component
+        var health = enemy.GetComponent<enemyStats>();
+        if (health != null)
+        {
+            health.TakeDamage(flameThrowerSO.damage);
         }
     }
 }

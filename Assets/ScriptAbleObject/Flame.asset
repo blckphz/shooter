@@ -12,21 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c603993ceebc9e4ebe8358c7644762c, type: 3}
   m_Name: Flame
   m_EditorClassIdentifier: 
-  BulletPrefab: {fileID: 0}
+  BulletPrefab: {fileID: 6699966938034684148, guid: 98aa954a4c4cfb6478df28a43a2093be, type: 3}
+  damage: 1
+  bulletSpeed: 12.1
+  fireMode: 1
+  maxClipSize: 50
+  currentClipSize: 50
+  currentReserveAmmo: 1175
   reloadTime: 0.36
-  maxClipSize: 11
-  currentReserveAmmo: 3
-  bulletSpeed: 0.25
-  ShootFreq: 0.19
   IsReloading: 0
   reloadTimer: 0
+  ShootFreq: 20.55
   cooldownRedux: 0
-  currentClipSize: 11
-  shootCooldown: 0.85
+  shootCooldown: 0
   cooldownTimer: 0
-  fireMode: 1
   burstCount: 3
   soundFx: {fileID: 0}
   reloadCompleteSound: {fileID: 0}
-  ammoDrainRate: 10
+  ammoDrainRate: 0.1
   damagePerSecond: 15
+  x: 0.1
+  y: 0.1
+  z: 0

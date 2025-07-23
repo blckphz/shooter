@@ -4,6 +4,7 @@ using TMPro; // Import TextMeshPro namespace
 public class PlayerHealth : MonoBehaviour
 {
     public static int Health = 100; // Start with 100 health
+    public int maxHealth = 100;     // Maximum health cap
     public CapsuleCollider capsule;
     public TextMeshProUGUI healthText; // Reference to TextMeshPro text
 
@@ -14,8 +15,8 @@ public class PlayerHealth : MonoBehaviour
     {
         if (healthText == null)
         {
-        healthText = GameObject.Find("hp").GetComponent<TextMeshProUGUI>();
-                }
+            healthText = GameObject.Find("hp").GetComponent<TextMeshProUGUI>();
+        }
 
         Debug.Log(Health);
 
@@ -41,15 +42,35 @@ public class PlayerHealth : MonoBehaviour
 
             // Enemy is NOT hooked - apply damage
             Debug.Log("Collided with Enemy! Health -20");
-            Health -= 20;
-            UpdateHealthUI();
-
-            if (Health <= 0)
-            {
-                ShowGameOver();
-            }
+            ChangeHealth(-20);
 
             DestroyActiveGrapplingHook();
+        }
+    }
+
+    // New method to safely change health (positive or negative)
+    public void ChangeHealth(int amount)
+    {
+        Health += amount;
+
+        // Clamp health between 0 and maxHealth
+        Health = Mathf.Clamp(Health, 0, maxHealth);
+
+        UpdateHealthUI();
+
+        if (Health <= 0)
+        {
+            ShowGameOver();
+        }
+    }
+
+    // Convenience method to heal the player by a positive amount
+    public void Heal(int amount)
+    {
+        if (amount > 0)
+        {
+            ChangeHealth(amount);
+            Debug.Log("Healed by " + amount + ". Current health: " + Health);
         }
     }
 
@@ -66,8 +87,10 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-   public void ShowGameOver()
+    public void ShowGameOver()
     {
+        // Your game over logic here
+        Debug.Log("Game Over!");
     }
 
     void UpdateHealthUI()

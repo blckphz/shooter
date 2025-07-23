@@ -21,8 +21,10 @@ public class GunBehaviour : MonoBehaviour
 
     public GameObject extraObject;
     private GunReload gunReload;
-
     private gunShooting gunShooting;
+
+    // Reference to the flame thrower behaviour if the current gun is a flamethrower
+    private FlameThrowerBehaviour flameThrowerBehaviour;
 
     void Start()
     {
@@ -40,47 +42,52 @@ public class GunBehaviour : MonoBehaviour
         }
     }
 
-void Update()
-{
-    if (currentGunso == null) return;
-
-    // Adjust cooldownTimer
-    if (currentGunso.cooldownTimer > 0f)
+    void Update()
     {
-        float reductionSpeed = 1f;
+        if (currentGunso == null) return;
 
-        // Faster cooldown reduction when airborne
-        ColliderGameOver playerGroundCheck = FindObjectOfType<ColliderGameOver>();
-        if (playerGroundCheck != null && !playerGroundCheck.isGrounded)
+        // Adjust cooldownTimer
+        if (currentGunso.cooldownTimer > 0f)
         {
-            reductionSpeed += currentGunso.cooldownRedux; // Apply the bonus
+            float reductionSpeed = 1f;
+
+            // Faster cooldown reduction when airborne
+            ColliderGameOver playerGroundCheck = FindObjectOfType<ColliderGameOver>();
+            if (playerGroundCheck != null && !playerGroundCheck.isGrounded)
+            {
+                reductionSpeed += currentGunso.cooldownRedux; // Apply the bonus
+            }
+
+            currentGunso.cooldownTimer -= Time.deltaTime * reductionSpeed;
         }
 
-        currentGunso.cooldownTimer -= Time.deltaTime * reductionSpeed;
+        // Reduce cooldown faster while reloading
+        if (currentGunso.IsReloading && currentGunso.cooldownTimer > 0f)
+        {
+            currentGunso.cooldownTimer = Mathf.Max(0f, currentGunso.cooldownTimer - Time.deltaTime * 2f);
+        }
+
+        // Manual reload input
+        if (Input.GetKeyDown(KeyCode.R) && !currentGunso.IsReloading && currentGunso.currentClipSize < currentGunso.maxClipSize)
+        {
+            gunReload.StartReload(currentGunso);
+        }
+
+        // Stop auto shooting when fire button released (not burst)
+        if (Input.GetButtonUp("Fire1"))
+        {
+            gunShooting.StopShootingCoroutines();
+
+            // Stop flame if current gun is a flamethrower
+            if (flameThrowerBehaviour != null)
+            {
+                //flameThrowerBehaviour.StopFlame();
+            }
+        }
+
+        // Always delegate shooting input to gunShooting (including PortalGun)
+        gunShooting.HandleShootingInput(currentGunso);
     }
-
-    // Reduce cooldown faster while reloading
-    if (currentGunso.IsReloading && currentGunso.cooldownTimer > 0f)
-    {
-        currentGunso.cooldownTimer = Mathf.Max(0f, currentGunso.cooldownTimer - Time.deltaTime * 2f);
-    }
-
-    // Manual reload input
-    if (Input.GetKeyDown(KeyCode.R) && !currentGunso.IsReloading && currentGunso.currentClipSize < currentGunso.maxClipSize)
-    {
-        gunReload.StartReload(currentGunso);
-    }
-
-    // Stop auto shooting when fire button released (not burst)
-    if (Input.GetButtonUp("Fire1"))
-    {
-        gunShooting.StopShootingCoroutines();
-    }
-
-    // Always delegate shooting input to gunShooting (including PortalGun)
-    gunShooting.HandleShootingInput(currentGunso);
-}
-
 
     public void SwitchGun(GunSO newGun)
     {
@@ -92,17 +99,21 @@ void Update()
         InitializeGun(currentGunso);
 
         // Link flame behaviour if needed
-        if (currentGunso is FlameThrowerSO flameSO)
+        if (currentGunso is FlameThrowerSO)
         {
-            FlameThrowerBehaviour flameBehav = GetComponentInChildren<FlameThrowerBehaviour>();
-            if (flameBehav != null)
+            flameThrowerBehaviour = GetComponentInChildren<FlameThrowerBehaviour>();
+            if (flameThrowerBehaviour != null)
             {
-                flameSO.SetFlameBehaviour(flameBehav);
+                //flameThrowerBehaviour.SetFlameThrowerSO((FlameThrowerSO)currentGunso);
             }
             else
             {
                 Debug.LogWarning("[GunBehaviour] No FlameThrowerBehaviour found in children!");
             }
+        }
+        else
+        {
+            flameThrowerBehaviour = null;  // No flame thrower for this gun
         }
 
         ApplyGunMaterial(currentGunIndex);
@@ -111,13 +122,12 @@ void Update()
         Debug.Log($"Switched to gun: {currentGunso.name}");
     }
 
-
     private void InitializeGun(GunSO gun)
     {
-        if (gun.currentClipSize == 0)
-        {
-            gun.currentClipSize = gun.maxClipSize;
-        }
+        // Do NOT reset ammo on weapon switch.
+        // Only do setup tasks like setting reload timers or resetting states if needed.
+        gun.IsReloading = false;
+        gun.reloadTimer = 0f;
     }
 
     private void ApplyGunMaterial(int gunIndex)

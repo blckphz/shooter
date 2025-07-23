@@ -15,12 +15,16 @@ MonoBehaviour:
   BulletPrefab: {fileID: 7228427364146905343, guid: 2fb9f1dae54c39a4498bdc3b7fb0b5c2, type: 3}
   reloadTime: 4.29
   maxClipSize: 4
+  currentReserveAmmo: 24
   bulletSpeed: 12.9
-  ShootFreq: 0.52
+  ShootFreq: 0.46
   IsReloading: 0
   reloadTimer: 0
-  currentClipSize: 2
-  shootCooldown: 0.48
-  cooldownTimer: 0.4959929
-  fireMode: 1
+  cooldownRedux: 0
+  currentClipSize: 4
+  shootCooldown: 0
+  cooldownTimer: 0
+  fireMode: 0
   burstCount: 3
+  soundFx: {fileID: 0}
+  reloadCompleteSound: {fileID: 0}

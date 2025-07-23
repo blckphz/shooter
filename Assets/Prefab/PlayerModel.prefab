@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 6064226015652963373}
   - component: {fileID: 1450657053667782749}
   - component: {fileID: 1287157507798033653}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 5531682575504259286}
   - component: {fileID: 4859600291482332692}
   - component: {fileID: 3153899521321110465}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -465,13 +465,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 8.08
+  maxJumps: 1
+  jumpCount: 0
   minJumpStrength: 9.9
-  maxJumpStrength: 29.9
-  maxJumpChargeTime: 0.48
+  maxJumpStrength: 39.4
+  maxJumpChargeTime: 0.52
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
-  jumpFreq: 1.4
+  jumpFreq: 0.84
   dashSpeed: 20
   dashDuration: 0.2
   dashCooldown: 2.54
@@ -497,6 +499,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff07b2cdcbd36f849ad64b0cdb43d1c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 100
   capsule: {fileID: 0}
   healthText: {fileID: 0}
 --- !u!136 &2845974369592455406
@@ -590,7 +593,8 @@ GameObject:
   - component: {fileID: 4560566039647532106}
   - component: {fileID: 7727305686143219524}
   - component: {fileID: 8658142403337292150}
-  m_Layer: 7
+  - component: {fileID: 5581589829180607715}
+  m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -629,6 +633,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guns:
   - {fileID: 11400000, guid: 3d3c2d05bcfd7aa45a50edb0b471f9f2, type: 2}
+  - {fileID: 11400000, guid: 0722768ff0775544a9698c82ca6fc200, type: 2}
   - {fileID: 11400000, guid: 11d886e44100fc142b3ed138a239e805, type: 2}
   - {fileID: 11400000, guid: e3d29a261dfaee84aaf7d70d682343f1, type: 2}
   - {fileID: 11400000, guid: 8cbaca22c389d5f4e822f6734f356ffd, type: 2}
@@ -807,7 +812,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8495cf5229a67224a9c967d298d917ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flameParticles: {fileID: 1840958004931582891, guid: 356bbe1147e21c143835952a0915c290, type: 3}
+  flameThrowerSO: {fileID: 0}
+--- !u!114 &5581589829180607715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045099316984669333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e41636413967e53498c91a2ad8fd57a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rayDistance: 100
 --- !u!1 &2079429540506263416
 GameObject:
   m_ObjectHideFlags: 0
@@ -820,7 +838,7 @@ GameObject:
   - component: {fileID: 5944204196842185873}
   - component: {fileID: 5732053934267798188}
   - component: {fileID: 6576456666562362667}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: gunHandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
