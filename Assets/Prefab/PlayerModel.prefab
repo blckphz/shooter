@@ -401,6 +401,7 @@ GameObject:
   - component: {fileID: 2845974369592455406}
   - component: {fileID: 1232157483732994302}
   - component: {fileID: 655180875578083107}
+  - component: {fileID: 8882601202096054845}
   m_Layer: 7
   m_Name: PlayerModel
   m_TagString: Player
@@ -464,6 +465,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 8.08
+  minJumpStrength: 9.9
+  maxJumpStrength: 29.9
+  maxJumpChargeTime: 0.48
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  jumpFreq: 1.4
   dashSpeed: 20
   dashDuration: 0.2
   dashCooldown: 2.54
@@ -476,6 +484,7 @@ MonoBehaviour:
   isHooked: 0
   hookPoint: {x: 0, y: 0, z: 0}
   activeHook: {fileID: 0}
+  floorCollider: {fileID: 0}
 --- !u!114 &1034313480808540608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -553,6 +562,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   beaconPrefab: {fileID: 8984980609732818406, guid: c018f7811f018fc4ab0eb24aac2648ec, type: 3}
+--- !u!114 &8882601202096054845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187520056399219864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0eb55e61b886cd4eba9b6bfebc786bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2045099316984669333
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,13 @@ public class PlayerMove : MonoBehaviour
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
 
+    [Header("Jump Settings")]
+    public float minJumpStrength = 5f;        // Minimum jump force (tap)
+    public float maxJumpStrength = 15f;       // Maximum jump force (full charge)
+    public float maxJumpChargeTime = 1f;      // Max time to charge jump
+    public LayerMask groundLayer;              // Layer to define ground
+    public float jumpFreq = 0.2f;              // Min time between jumps
+
     [Header("Dash Settings")]
     public float dashSpeed = 20f;
     public float dashDuration = 0.2f;
@@ -46,8 +53,19 @@ public class PlayerMove : MonoBehaviour
     private bool isOnIce = false;
     private float iceSpeedMultiplier = 1f;
 
+    // Jump cooldown timer
+    private float jumpTimer = 0f;
+
+    // Jump charge variables
+    private bool isChargingJump = false;
+    private float jumpChargeTimer = 0f;
+
+    public ColliderGameOver floorCollider;
+
     void Awake()
     {
+        floorCollider = GameObject.Find("Terrain").GetComponent<ColliderGameOver>();
+
         rb = GetComponent<Rigidbody>();
         rb.interpolation = RigidbodyInterpolation.Interpolate;
 
@@ -69,13 +87,11 @@ public class PlayerMove : MonoBehaviour
         // Timers
         if (dashCooldownTimer > 0f) dashCooldownTimer -= Time.deltaTime;
         if (dashTimer > 0f) dashTimer -= Time.deltaTime;
+        if (dashTimer <= 0f && isDashing) isDashing = false;
 
-        if (dashTimer <= 0f && isDashing)
-            isDashing = false;
-
+        jumpTimer += Time.deltaTime; // Update jump cooldown
         UpdateDashCooldownUI();
 
-        // Only capture input when not hooked
         if (!isHooked)
         {
             moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
@@ -93,12 +109,46 @@ public class PlayerMove : MonoBehaviour
                 if (dashDir != Vector3.zero)
                     StartDash(dashDir);
             }
+
+            // Jump charge logic with freq cooldown:
+            if (Input.GetKeyDown(KeyCode.Space) && jumpTimer >= jumpFreq )
+            {
+                // Start charging jump only if cooldown passed
+                isChargingJump = true;
+                jumpChargeTimer = 0f;
+            }
+
+            if (Input.GetKey(KeyCode.Space) && isChargingJump)
+            {
+                jumpChargeTimer += Time.deltaTime;
+
+                if (jumpChargeTimer >= maxJumpChargeTime)
+                {
+                    // Auto jump on full charge
+                    PerformJump(maxJumpStrength);
+                    jumpTimer = 0f;          // Reset jump cooldown
+                    isChargingJump = false;  // Stop charging
+                }
+            }
+
+            if (Input.GetKeyUp(KeyCode.Space) && isChargingJump)
+            {
+                // Jump released before full charge
+                float chargePercent = jumpChargeTimer / maxJumpChargeTime;
+                float jumpForce = Mathf.Lerp(minJumpStrength, maxJumpStrength, chargePercent);
+                PerformJump(jumpForce);
+
+                jumpTimer = 0f;          // Reset jump cooldown
+                isChargingJump = false;  // Stop charging
+            }
         }
         else
         {
             moveInput = Vector3.zero; // Lock movement while hooked
         }
     }
+
+
 
     void FixedUpdate()
     {
@@ -138,6 +188,18 @@ public class PlayerMove : MonoBehaviour
         ApplyExtraGravity();
     }
 
+    // Replace Jump with PerformJump to accept jump force parameter
+    void PerformJump(float jumpForce)
+    {
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z); // reset vertical velocity
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+
+    bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, 1.1f, groundLayer);
+    }
+
     void StartDash(Vector3 direction)
     {
         isDashing = true;
@@ -174,24 +236,19 @@ public class PlayerMove : MonoBehaviour
         iceSpeedMultiplier = multiplier;
     }
 
-    // Called by grappling hook to start pulling player
     public void StartHookPull(Vector3 point)
     {
         isHooked = true;
         hookPoint = point;
         isDashing = false;
-
     }
 
-    // Called to stop pulling player (e.g., when hook detaches)
     public void StopHookPull()
     {
         isHooked = false;
-
-            audioSource.Stop();
+        audioSource.Stop();
     }
 
-    // Pull player toward hook point smoothly
     void PullToHookPoint()
     {
         Vector3 direction = hookPoint - transform.position;
@@ -199,18 +256,14 @@ public class PlayerMove : MonoBehaviour
 
         if (distance > 0.5f)
         {
-
-            activeHook.grapplingAudio.Play();
-
+            if (activeHook != null && activeHook.grapplingAudio != null)
+                activeHook.grapplingAudio.Play();
             direction.Normalize();
             Vector3 pullVelocity = direction * hookPullSpeed;
-
-            // Pull in all directions (including vertical)
             rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, pullVelocity, Time.fixedDeltaTime * 10f);
         }
         else
         {
-            // Close enough to hook point - stop pulling
             StopHookPull();
             rb.linearVelocity = Vector3.zero;
         }
