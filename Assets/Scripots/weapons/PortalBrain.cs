@@ -36,9 +36,12 @@ public class PortalBrain : MonoBehaviour
     }
 
 
-private IEnumerator Teleport(Rigidbody rb, Transform targetPortal)
+    private IEnumerator Teleport(Rigidbody rb, Transform targetPortal)
     {
         canTeleport = false;
+
+        // Use the child transform as the destination
+        Transform destination = targetPortal.childCount > 0 ? targetPortal.GetChild(0) : targetPortal;
 
         // Determine offset size based on object bounds
         float objectOffset = 0.2f; // fallback offset
@@ -48,11 +51,11 @@ private IEnumerator Teleport(Rigidbody rb, Transform targetPortal)
             objectOffset = col.bounds.extents.magnitude * 0.5f;
         }
 
-        Vector3 targetPosition = targetPortal.position + targetPortal.forward * 1.0f + targetPortal.up * objectOffset;
+        Vector3 targetPosition = destination.position + destination.forward * 1.0f + destination.up * objectOffset;
 
         // Log debug information
-        Debug.Log($"[Teleport] Portal: {targetPortal.name}");
-        Debug.Log($"[Teleport] Portal Forward: {targetPortal.forward}, Portal Up: {targetPortal.up}");
+        Debug.Log($"[Teleport] Portal: {destination.name}");
+        Debug.Log($"[Teleport] Portal Forward: {destination.forward}, Portal Up: {destination.up}");
         Debug.Log($"[Teleport] Offset Magnitude: {objectOffset}");
         Debug.Log($"[Teleport] Final Target Position: {targetPosition}");
 
@@ -60,11 +63,12 @@ private IEnumerator Teleport(Rigidbody rb, Transform targetPortal)
         rb.position = targetPosition;
 
         // Adjust velocity to match target portal direction
-        rb.linearVelocity = targetPortal.forward * rb.linearVelocity.magnitude;
+        rb.linearVelocity = destination.forward * rb.linearVelocity.magnitude;
         Debug.Log($"[Teleport] New Velocity: {rb.linearVelocity}");
 
         yield return new WaitForSeconds(teleportCooldown);
         canTeleport = true;
     }
+
 
 }

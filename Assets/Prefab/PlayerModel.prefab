@@ -813,6 +813,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flameThrowerSO: {fileID: 0}
+  isPlaying: 0
 --- !u!114 &5581589829180607715
 MonoBehaviour:
   m_ObjectHideFlags: 0
