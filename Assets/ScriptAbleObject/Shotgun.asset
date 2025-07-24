@@ -9,31 +9,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c603993ceebc9e4ebe8358c7644762c, type: 3}
-  m_Name: Flame
+  m_Script: {fileID: 11500000, guid: 98c40e1fceb2bd846bfad9bd4caf3c21, type: 3}
+  m_Name: Shotgun
   m_EditorClassIdentifier: 
-  BulletPrefab: {fileID: 6699966938034684148, guid: 98aa954a4c4cfb6478df28a43a2093be, type: 3}
-  damage: 1
-  bulletSpeed: 12.1
+  BulletPrefab: {fileID: 8580646717371106072, guid: e5672fbaa194e4544b3a95bef1fd254f, type: 3}
+  damage: 0
+  bulletSpeed: 22.8
   fireMode: 1
-  maxClipSize: 50
-  currentClipSize: 50
-  currentReserveAmmo: 221
-  reloadTime: 0.36
+  maxClipSize: 5
+  currentClipSize: 2
+  currentReserveAmmo: 0
+  reloadTime: 1.02
   IsReloading: 0
   reloadTimer: 0
-  ShootFreq: 48.7
-  cooldownRedux: 0
-  shootCooldown: 0
-  cooldownTimer: 0
+  ShootFreq: 0.97
+  cooldownRedux: 0.16
+  shootCooldown: 0.96
+  cooldownTimer: 0.28396896
   burstCount: 3
   audiosource: {fileID: 0}
-  soundFx: {fileID: 8300000, guid: 1fa435f970e11f243aac02dd01492009, type: 3}
+  soundFx: {fileID: 8300000, guid: 02fa4f20d65458b488a7e72e427da256, type: 3}
   reloadStartSound: {fileID: 8300000, guid: d2813acb473265d47a4c96a2a9c9e28d, type: 3}
   reloadCompleteSound: {fileID: 8300000, guid: 5880d84cc96a78d42a438d170fcf3008, type: 3}
-  ammoDrainRate: 0.06
-  damagePerSecond: 15
-  x: 0.1
-  y: 0.1
+  x: 0.06
+  y: 0.06
   z: 0
-  stioFlame: {fileID: 0}
+  pelletsPerShot: 6
+  bulletLifetime: 2
+  leverreloadsound: {fileID: 0}

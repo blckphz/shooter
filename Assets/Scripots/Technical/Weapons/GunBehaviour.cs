@@ -77,7 +77,6 @@ public class GunBehaviour : MonoBehaviour
 {
     if (flameThrowerBehaviour != null)
     {
-        Debug.Log("Fire1 pressed, starting flame.");
         flameThrowerBehaviour.StartFlame();
     }
 }
@@ -88,7 +87,6 @@ if (Input.GetButtonUp("Fire1"))
 
     if (flameThrowerBehaviour != null)
     {
-        Debug.Log("Fire1 released, stopping flame.");
         flameThrowerBehaviour.StopFlame();
     }
 }
@@ -130,7 +128,6 @@ if (Input.GetButtonUp("Fire1"))
         ApplyGunMaterial(currentGunIndex);
         ApplyGunScale(currentGunIndex);
 
-        Debug.Log($"Switched to gun: {currentGunso.name}");
     }
 
     private void InitializeGun(GunSO gun)

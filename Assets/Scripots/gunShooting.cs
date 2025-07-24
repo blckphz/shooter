@@ -14,6 +14,8 @@ public class gunShooting : MonoBehaviour
     private screenShake screenShakeEffect;
     private ColliderGameOver playerGroundCheck;
 
+    public AudioSource audioSourceShotgun;
+
     void Start()
     {
         gunReload = GetComponent<GunReload>();
@@ -25,14 +27,12 @@ public class gunShooting : MonoBehaviour
             Debug.LogWarning("AudioSource component missing on gun GameObject!");
         }
 
-        // Find the screen shake effect in the scene
         screenShakeEffect = FindObjectOfType<screenShake>();
         if (screenShakeEffect == null)
         {
             Debug.LogWarning("No screenShake component found in the scene!");
         }
 
-        // Find the player's ground state tracker
         playerGroundCheck = FindObjectOfType<ColliderGameOver>();
         if (playerGroundCheck == null)
         {
@@ -44,9 +44,6 @@ public class gunShooting : MonoBehaviour
     {
         if (currentGunso == null) return;
 
-  
-
-        // --- Existing Gun Logic ---
         if (currentGunso is PortalGun portalGun)
         {
             if (Input.GetButtonDown("Fire1") && !currentGunso.IsReloading)
@@ -60,7 +57,6 @@ public class gunShooting : MonoBehaviour
             return;
         }
 
-        // Normal gun shooting
         switch (currentGunso.fireMode)
         {
             case FireMode.SemiAuto:
@@ -87,7 +83,6 @@ public class gunShooting : MonoBehaviour
                 break;
         }
     }
-
 
     private void TryShootPortal(PortalGun portalGun, bool isBlue)
     {
@@ -118,13 +113,11 @@ public class gunShooting : MonoBehaviour
         else
             portalGun.ShootOrangePortal(gunBehaviour.spawnPoint, portalGun.bulletSpeed);
 
-        // Screen shake for portal shots
         if (screenShakeEffect != null)
         {
             screenShakeEffect.Shake(0.7f, 0.15f);
         }
 
-        // Apply airborne cooldown reduction
         float cooldown = portalGun.shootCooldown;
         if (playerGroundCheck != null && !playerGroundCheck.isGrounded)
         {
@@ -157,19 +150,16 @@ public class gunShooting : MonoBehaviour
             return;
         }
 
-        if (!(currentGunso is Grappling))
-        {
-            SpawnBullet(currentGunso);
-        }
+        currentGunso.ShootGun(gunBehaviour.spawnPoint, currentGunso.bulletSpeed);
 
         currentGunso.currentClipSize--;
 
-        if (audioSource != null && currentGunso.soundFx != null)
+        // ONLY play sound if not flame thrower
+        if (!(currentGunso is FlameThrowerSO))
         {
-            audioSource.PlayOneShot(currentGunso.soundFx);
+            currentGunso.playSound(audioSource);
         }
 
-        // Screen shake for normal shots
         if (screenShakeEffect != null)
         {
             float shakeStrength = 1.0f;
@@ -186,14 +176,12 @@ public class gunShooting : MonoBehaviour
             currentGunso.cooldownTimer = cooldown;
         }
 
-        currentGunso.ShootGun(gunBehaviour.spawnPoint, currentGunso.bulletSpeed);
-
         if (currentGunso.currentClipSize <= 0 && !currentGunso.IsReloading)
         {
             gunReload.StartReload(currentGunso);
-            Debug.Log("Clip empty! Reloading...");
         }
     }
+
 
     IEnumerator BurstShoot(GunSO currentGunso)
     {
@@ -257,41 +245,6 @@ public class gunShooting : MonoBehaviour
         isBurstShooting = false;
         autoShootCoroutine = null;
     }
-    void SpawnBullet(GunSO currentGunso)
-    {
-        // Determine bullet spawn rotation and direction
-        Quaternion spawnRotation = gunBehaviour.spawnPoint.rotation;
-        Vector3 direction = gunBehaviour.spawnPoint.forward;
-
-        // If this is a FlameThrowerSO, add random spread based on x and y
-        if (currentGunso is FlameThrowerSO flameThrower)
-        {
-            Vector3 randomSpread = new Vector3(
-                Random.Range(-flameThrower.x, flameThrower.x),  // Horizontal spread
-                Random.Range(-flameThrower.y, flameThrower.y),  // Vertical spread
-                0f
-            );
-
-            // Apply spread in local space
-            direction = gunBehaviour.spawnPoint.forward + gunBehaviour.spawnPoint.TransformDirection(randomSpread);
-            direction.Normalize();  // Keep speed consistent
-            spawnRotation = Quaternion.LookRotation(direction);
-        }
-
-        // Instantiate bullet
-        GameObject bullet = Instantiate(currentGunso.BulletPrefab, gunBehaviour.spawnPoint.position, spawnRotation);
-        bullet.transform.Rotate(0f, 0f, 90f);
-
-        // Apply velocity
-        Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.linearVelocity = direction * currentGunso.bulletSpeed;
-        }
-
-        Destroy(bullet, 5f);  // Destroy after 5 seconds
-    }
-
 
     public void StopShootingCoroutines()
     {

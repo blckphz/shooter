@@ -21,4 +21,15 @@ public class Grappling : GunSO
             hookScript.player = spawnPoint.root; // Assign player
         }
     }
+
+    public override void playSound(AudioSource audioSource)
+    {
+        if (audioSource != null && soundFx != null)
+        {
+            audioSource.PlayOneShot(soundFx);
+        }
+    }
+
+
+
 }

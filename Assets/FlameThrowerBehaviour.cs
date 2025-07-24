@@ -4,114 +4,74 @@ public class FlameThrowerBehaviour : MonoBehaviour
 {
     public FlameThrowerSO flameThrowerSO;
 
-    private AudioSource flameLoopSource;  // Looping flame sound
-    private AudioSource oneShotSource;    // One-shot stop sound
+    public AudioSource flameLoopSource;
+    public AudioSource oneShotSource;
 
-    public bool isPlaying = false;        // Current state flag
+    private bool isPlaying = false;
 
-    void Start()
+    void Update()
     {
-        AudioSource[] sources = GetComponents<AudioSource>();
+        if (flameThrowerSO == null) return;
 
-        if (sources.Length < 2)
+        // Start flame on input
+        if (Input.GetButtonDown("Fire1"))
         {
-            flameLoopSource = gameObject.AddComponent<AudioSource>();
-            oneShotSource = gameObject.AddComponent<AudioSource>();
+            StartFlame();
         }
-        else
+        // Stop flame on input release
+        else if (Input.GetButtonUp("Fire1"))
         {
-            flameLoopSource = sources[0];
-            oneShotSource = sources[1];
+            StopFlame();
         }
 
-        // Setup
-        flameLoopSource.playOnAwake = false;
-        flameLoopSource.loop = true;
-        flameLoopSource.volume = 1f;
-
-        oneShotSource.playOnAwake = false;
-        oneShotSource.loop = false;
-        oneShotSource.volume = 1f;
+        // Auto-stop flame when out of ammo
+        if (isPlaying)
+        {
+            if (flameThrowerSO.currentClipSize <= 0)
+            {
+                flameThrowerSO.currentClipSize = 0;
+                StopFlame();
+            }
+        }
     }
 
     public void StartFlame()
     {
-        if (isPlaying || flameThrowerSO == null)
+        if (isPlaying) return;
+
+        if (flameThrowerSO.soundFx == null)
         {
-            Debug.Log("StartFlame called but already playing or no SO.");
+            Debug.LogWarning("No flame loop sound assigned!");
             return;
         }
 
-        isPlaying = true;
-        Debug.Log("Flame started!");
-
-        if (flameThrowerSO.soundFx != null)
+        if (flameThrowerSO.currentClipSize <= 0)
         {
-            flameLoopSource.clip = flameThrowerSO.soundFx;
-            flameLoopSource.volume = 1f;
-            flameLoopSource.Play();
+            Debug.Log("No ammo to start flame.");
+            return;
         }
-    }
 
+        flameLoopSource.clip = flameThrowerSO.soundFx;
+        flameLoopSource.loop = true;
+        flameLoopSource.Play();
+        isPlaying = true;
+    }
 
     public void StopFlame()
     {
-        if (!isPlaying)
-        {
-            Debug.Log("StopFlame called but flame was not playing.");
-            return;
-        }
-
-        isPlaying = false;
+        if (!isPlaying) return;
 
         if (flameLoopSource.isPlaying)
         {
             flameLoopSource.Stop();
+            flameLoopSource.clip = null;
         }
 
-        flameLoopSource.clip = null;
+        isPlaying = false;
 
         if (flameThrowerSO.stioFlame != null)
         {
             oneShotSource.PlayOneShot(flameThrowerSO.stioFlame);
-        }
-
-        Debug.Log("Flamethrower sound stopped.");
-    }
-
-
-
-    // Optional failsafe (if sound gets stuck due to missed input release)
-    private void LateUpdate()
-    {
-        if (!Input.GetButton("Fire1") && isPlaying)
-        {
-            StopFlame();  // Enforce stop
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-            ApplyFlameDamage(other.gameObject);
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-            ApplyFlameDamage(other.gameObject);
-        }
-    }
-
-    private void ApplyFlameDamage(GameObject enemy)
-    {
-        var health = enemy.GetComponent<enemyStats>();
-        if (health != null)
-        {
-            health.TakeDamage(flameThrowerSO.damage);
         }
     }
 }

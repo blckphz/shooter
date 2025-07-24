@@ -67,7 +67,6 @@ public class SaveScript : MonoBehaviour
         data = JsonUtility.FromJson<Data>(json);
 
 
-        Debug.Log("Load");
     }
 
 

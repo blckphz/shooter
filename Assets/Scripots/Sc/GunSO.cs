@@ -66,6 +66,9 @@ public abstract class GunSO : ScriptableObject
 
     // -------------------- AUDIO --------------------
     [Header("Audio Clips")]
+
+    public AudioSource audiosource;
+
     [Tooltip("Sound effect played when the gun fires.")]
     public AudioClip soundFx;
 
@@ -77,4 +80,7 @@ public abstract class GunSO : ScriptableObject
     // -------------------- ABSTRACT METHODS --------------------
     [Tooltip("Abstract method for shooting (to be implemented in derived classes).")]
     public abstract void ShootGun(Transform spawnPoint, float bulletSpeed);
+
+    public abstract void playSound(AudioSource audioSource);
+
 }

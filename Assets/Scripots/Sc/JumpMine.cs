@@ -14,5 +14,15 @@ public class JumpMine : GunSO
         // We keep it in GunBehaviour for now.
     }
 
+    public override void playSound(AudioSource audioSource)
+    {
+        if (audioSource != null && soundFx != null)
+        {
+            audioSource.PlayOneShot(soundFx);
+        }
+    }
+
+
+
     // Update is called once per frame
 }

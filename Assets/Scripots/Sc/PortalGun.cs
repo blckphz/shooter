@@ -71,4 +71,16 @@ public class PortalGun : GunSO
         if (currentBluePortal == null || currentOrangePortal == null) return;
         PortalBrain.Instance.RegisterPortals(currentBluePortal.transform, currentOrangePortal.transform);
     }
+
+
+    public override void playSound(AudioSource audioSource)
+    {
+        if (audioSource != null && soundFx != null)
+        {
+            audioSource.PlayOneShot(soundFx);
+        }
+    }
+
+
+
 }
