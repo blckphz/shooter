@@ -18,14 +18,14 @@ MonoBehaviour:
   fireMode: 1
   maxClipSize: 5
   currentClipSize: 2
-  currentReserveAmmo: 0
+  currentReserveAmmo: 55
   reloadTime: 1.02
   IsReloading: 0
   reloadTimer: 0
   ShootFreq: 0.97
-  cooldownRedux: 0.16
+  cooldownRedux: 0.2
   shootCooldown: 0.96
-  cooldownTimer: 0.28396896
+  cooldownTimer: -0.000050491188
   burstCount: 3
   audiosource: {fileID: 0}
   soundFx: {fileID: 8300000, guid: 02fa4f20d65458b488a7e72e427da256, type: 3}

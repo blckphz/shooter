@@ -83,4 +83,7 @@ public abstract class GunSO : ScriptableObject
 
     public abstract void playSound(AudioSource audioSource);
 
+
+    //public abstract void Reload();
+
 }

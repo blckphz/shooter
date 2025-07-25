@@ -17,16 +17,17 @@ MonoBehaviour:
   bulletSpeed: 59.5
   fireMode: 1
   maxClipSize: 85
-  currentClipSize: 55
-  currentReserveAmmo: 5
+  currentClipSize: 2
+  currentReserveAmmo: 116
   reloadTime: 2.15
   IsReloading: 0
   reloadTimer: 0
   ShootFreq: 2.73
-  cooldownRedux: 0.48
+  cooldownRedux: 0.11
   shootCooldown: 0.1
-  cooldownTimer: -0.00040788273
+  cooldownTimer: -0.0032416328
   burstCount: 3
+  audiosource: {fileID: 0}
   soundFx: {fileID: 8300000, guid: 2f0fe006d99591f45a152f6d296e0dbe, type: 3}
   reloadStartSound: {fileID: 8300000, guid: d2813acb473265d47a4c96a2a9c9e28d, type: 3}
   reloadCompleteSound: {fileID: 8300000, guid: 5880d84cc96a78d42a438d170fcf3008, type: 3}

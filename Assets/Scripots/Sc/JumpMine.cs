@@ -10,6 +10,16 @@ public class JumpMine : GunSO
         // Simple Debug
         Debug.Log("Pistol shoot!");
 
+        GameObject bullet = Instantiate(BulletPrefab, spawnPoint.position, spawnPoint.rotation);
+
+        Vector3 spawnPosition = spawnPoint.position + spawnPoint.forward * 0.5f; // Offset forward
+
+
+
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        rb.linearVelocity = spawnPoint.forward * bulletSpeed; // Launch hook
+
+
         // The actual bullet spawning logic could be here or in GunBehaviour.
         // We keep it in GunBehaviour for now.
     }

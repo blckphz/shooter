@@ -4,8 +4,8 @@ using UnityEngine;
 public class FlameThrowerSO : GunSO
 {
     [Header("Flamethrower Stats")]
-    public float ammoDrainRate = 10f;
-    public float damagePerSecond = 15f;
+    public int ammoDrainRate = 10;
+    public int damagePerSecond;
     public float x, y, z;
     public AudioClip stioFlame;
 
@@ -35,6 +35,29 @@ public class FlameThrowerSO : GunSO
     }
 
 
+    private float ammoDrainAccumulator = 0f;
+
+    public void UpdateAmmoDrain(float deltaTime)
+    {
+        if (currentClipSize <= 0 || ammoDrainRate <= 0) return;
+
+        // Accumulate fractional ammo drain
+        ammoDrainAccumulator += ammoDrainRate * deltaTime;
+
+        // Only drain when enough has accumulated for a full unit
+        if (ammoDrainAccumulator >= 1f)
+        {
+            int ammoToDrain = Mathf.FloorToInt(ammoDrainAccumulator);
+            int actualDrain = Mathf.Min(currentClipSize, ammoToDrain);
+
+            currentClipSize -= actualDrain;
+            ammoDrainAccumulator -= actualDrain;
+        }
+    }
+
+
+
+
     public override void playSound(AudioSource audioSource)
     {
         if (audioSource != null && soundFx != null)
@@ -43,6 +66,12 @@ public class FlameThrowerSO : GunSO
         }
     }
 
+    /*
 
+    public override void Reload()
+    {
+    }
+
+    */
 
 }

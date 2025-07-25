@@ -1,60 +1,59 @@
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [Header("Prefabs to Spawn")]
-    public GameObject prefabToSpawn;   // Spawns at fixedY
-    public GameObject pickUp;          // Spawns on ground
-    public GameObject extraObject;     // Another ground object
+    public int currentRound = 1;
 
-    [Header("Spawn Intervals")]
-    public float mainSpawnInterval = 2f;  // Time between spawns for prefabToSpawn
-    public float pickUpSpawnInterval = 5f; // Time between spawns for pickUp
-    public float extraObjectInterval = 7f; // Time between spawns for extraObject
+    public GameObject enemyPrefab;
+    public int maxEnemies = 10;
+    public Transform spawnPoint;
 
-    [Header("Random Position Ranges")]
-    public Vector2 xRange = new Vector2(-100f, 0f);
-    public Vector2 zRange = new Vector2(-100f, 0f);
+    public List<GameObject> enemies = new List<GameObject>();
 
-    public float fixedY = 5f;  // Height for main prefab
-
-    private float mainTimer = 0f;
-    private float pickUpTimer = 0f;
-    private float extraTimer = 0f;
+    private bool isActiveRound = false;
+    private bool hasSpawnedThisRound = false;
 
     void Update()
     {
-        mainTimer += Time.deltaTime;
-        pickUpTimer += Time.deltaTime;
-        extraTimer += Time.deltaTime;
+        // Only remove null entries — don't clear the list completely
+        enemies.RemoveAll(enemy => enemy == null);
 
-        if (mainTimer >= mainSpawnInterval)
+        // Round ends ONLY if all enemies are dead AND the correct number were spawned
+        if (isActiveRound && enemies.Count == 0 && hasSpawnedThisRound)
         {
-            SpawnPrefab(prefabToSpawn, fixedY);
-            mainTimer = 0f;
+            Debug.Log("Round " + currentRound + " complete!");
+
+            isActiveRound = false;
+            hasSpawnedThisRound = false;
+
+         
         }
 
-        if (pickUpTimer >= pickUpSpawnInterval)
+        // Start a new round if ready
+        if (!isActiveRound && !hasSpawnedThisRound)
         {
-            SpawnPrefab(pickUp, 0f);
-            pickUpTimer = 0f;
-        }
-
-        if (extraTimer >= extraObjectInterval)
-        {
-            SpawnPrefab(extraObject, 0f);
-            extraTimer = 0f;
+            SpawnAllEnemies();
+            hasSpawnedThisRound = true;
+            isActiveRound = true;
         }
     }
 
-    void SpawnPrefab(GameObject prefab, float yPos)
+    void SpawnAllEnemies()
     {
-        if (prefab == null) return; // Safety check
+        Vector3 position = spawnPoint ? spawnPoint.position : transform.position;
 
-        float randomX = Random.Range(xRange.x, xRange.y);
-        float randomZ = Random.Range(zRange.x, zRange.y);
+        enemies.Clear(); // Prepare for a fresh round
 
-        Vector3 spawnPos = new Vector3(randomX, yPos, randomZ);
-        Instantiate(prefab, spawnPos, Quaternion.identity);
+        for (int i = 0; i < maxEnemies; i++)
+        {
+            GameObject newEnemy = Instantiate(enemyPrefab, position, Quaternion.identity);
+            enemies.Add(newEnemy);
+
+            currentRound++;
+            maxEnemies += 2; // Optional difficulty ramp
+        }
+
+        Debug.Log("Spawned " + maxEnemies + " enemies for round " + currentRound);
     }
 }

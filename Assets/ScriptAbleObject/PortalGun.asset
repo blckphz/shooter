@@ -17,17 +17,19 @@ MonoBehaviour:
   bulletSpeed: 24.6
   fireMode: 0
   maxClipSize: 81
-  currentClipSize: 72
+  currentClipSize: 55
   currentReserveAmmo: 61
   reloadTime: 4.41
   IsReloading: 0
   reloadTimer: 0
   ShootFreq: 2.12
-  cooldownRedux: 0
+  cooldownRedux: 0.12
   shootCooldown: 0.04
-  cooldownTimer: -0.0002559037
+  cooldownTimer: -0.0009420044
   burstCount: 0
+  audiosource: {fileID: 0}
   soundFx: {fileID: 0}
+  reloadStartSound: {fileID: 0}
   reloadCompleteSound: {fileID: 0}
   portalProjectilePrefab: {fileID: 6759846994078647378, guid: 6f02a6ca99e5a834b8cb83c967338575, type: 3}
   bluePortalPrefab: {fileID: 244000369166352083, guid: 27eb4acec2c462d429e21c4181d637bf, type: 3}

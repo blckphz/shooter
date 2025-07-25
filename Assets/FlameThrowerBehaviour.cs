@@ -3,30 +3,35 @@
 public class FlameThrowerBehaviour : MonoBehaviour
 {
     public FlameThrowerSO flameThrowerSO;
-
+    private GunBehaviour gunbehav;
     public AudioSource flameLoopSource;
     public AudioSource oneShotSource;
 
     private bool isPlaying = false;
 
+
+    private void Awake()
+    {
+        gunbehav = GetComponentInParent<GunBehaviour>(); // ✅ Correct assignment
+    }
+
     void Update()
     {
         if (flameThrowerSO == null) return;
 
-        // Start flame on input
         if (Input.GetButtonDown("Fire1"))
         {
             StartFlame();
         }
-        // Stop flame on input release
         else if (Input.GetButtonUp("Fire1"))
         {
             StopFlame();
         }
 
-        // Auto-stop flame when out of ammo
         if (isPlaying)
         {
+            flameThrowerSO.UpdateAmmoDrain(Time.deltaTime);
+
             if (flameThrowerSO.currentClipSize <= 0)
             {
                 flameThrowerSO.currentClipSize = 0;
@@ -35,8 +40,18 @@ public class FlameThrowerBehaviour : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+
+        enemyStats enemy = other.GetComponent<enemyStats>();
+            enemy.TakeDamage(flameThrowerSO.damage);
+    }
+
+
+
     public void StartFlame()
     {
+
         if (isPlaying) return;
 
         if (flameThrowerSO.soundFx == null)
@@ -51,10 +66,14 @@ public class FlameThrowerBehaviour : MonoBehaviour
             return;
         }
 
-        flameLoopSource.clip = flameThrowerSO.soundFx;
-        flameLoopSource.loop = true;
-        flameLoopSource.Play();
-        isPlaying = true;
+        if (gunbehav.currentGunso == gunbehav.guns[2])
+        {
+            flameLoopSource.clip = flameThrowerSO.soundFx;
+            flameLoopSource.loop = true;
+            flameLoopSource.Play();
+            isPlaying = true;
+
+        }
     }
 
     public void StopFlame()

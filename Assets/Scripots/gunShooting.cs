@@ -152,12 +152,22 @@ public class gunShooting : MonoBehaviour
 
         currentGunso.ShootGun(gunBehaviour.spawnPoint, currentGunso.bulletSpeed);
 
-        currentGunso.currentClipSize--;
+
+        //REDUES CLIP 
+
+        if (!(currentGunso is FlameThrowerSO))
+        {
+            currentGunso.currentClipSize--;
+        }
+
+
+
 
         // ONLY play sound if not flame thrower
         if (!(currentGunso is FlameThrowerSO))
         {
             currentGunso.playSound(audioSource);
+            Debug.Log(audioSource);
         }
 
         if (screenShakeEffect != null)
